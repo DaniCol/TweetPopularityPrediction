@@ -1,4 +1,5 @@
 #pragma once
+#include <iostream>
 #include <vector>
 #include <string>
 #include <memory>
@@ -25,6 +26,7 @@ namespace tweetoscope{
 
   
   using history = std::vector<std::pair<tweetoscope::timestamp, double>>;
+  std::ostream& operator<<(std::ostream &flux, Cascade const& cascade);
 
   class Cascade {
     private:
@@ -54,6 +56,13 @@ namespace tweetoscope{
 
       // Class methods
       bool is_dead();
-      void update_cascade();
+      void kill();
+      void update_cascade(tweetoscope::tweet& tweet);
+
+      friend std::ostream& operator<<(std::ostream &flux, Cascade const& cascade);
   };
+
+  inline ref_cascade make_cascade(tweetoscope::cascade::idf key, tweetoscope::tweet& tweet){
+      return std::make_shared<tweetoscope::Cascade>(key, tweet);
+  }
 }
