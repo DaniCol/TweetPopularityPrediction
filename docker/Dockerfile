@@ -1,17 +1,26 @@
 # Image based on the default ubuntu image 
 FROM ubuntu
 
-# Install Basics 
-RUN DEBIAN_FRONTEND=noninteractive apt-get update --yes; DEBIAN_FRONTEND=noninteractive apt-get install -y wget ; DEBIAN_FRONTEND=noninteractive apt-get install -y curl ; DEBIAN_FRONTEND=noninteractive apt install -y build-essential pkg-config python-dev python-six cython python-numpy coinor-libipopt1v5 coinor-libipopt-dev ; DEBIAN_FRONTEND=noninteractive apt install -y default-jdk
+# Install Everything  
+RUN mkdir /install_script
+COPY ./install_script/install_basics.sh  /install_script/install_basics.sh 
+RUN /install_script/install_basics.sh 
 
-# Install Kafka 
-RUN wget https://archive.apache.org/dist/kafka/2.4.1/kafka-2.4.1-src.tgz ; tar zxvf kafka-2.4.1-src.tgz
+# Get packages from the internet
+RUN git clone https://github.com/HerveFrezza-Buet/gaml 
+RUN wget https://archive.apache.org/dist/kafka/2.4.1/kafka-2.4.1-src.tgz 
 
-# Build kafka
-RUN cd ./kafka-2.4.1-src ; ./gradlew jar -PscalaVersion=2.12.10
+COPY ./install_script/install_gaml.sh  /install_script/install_gaml.sh 
+RUN /install_script/install_gaml.sh
 
-# Install Boost 
-RUN apt install -y libboost-all-dev ; apt install -y aptitude ; aptitude search boost
+COPY ./install_script/install_kafka.sh  /install_script/install_kafka.sh 
+RUN /install_script/install_kafka.sh 
 
+COPY ./install_script/install_boost.sh  /install_script/install_boost.sh 
+RUN /install_script/install_boost.sh 
 
-#RUN wget https://boostorg.jfrog.io/native/main/release/1.77.0/source/boost_1_77_0.tar.gz ; tar xzvf boost_1_77_0.tar.gz ; cd boost_1_77_0/
+COPY ./install_script/install_cppkafka.sh  /install_script/install_cppkafka.sh 
+RUN /install_script/install_cppkafka.sh
+
+COPY ./entrypoint.sh entrypoint.sh
+ENTRYPOINT ["./entrypoint.sh"]
