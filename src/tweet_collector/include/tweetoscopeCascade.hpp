@@ -6,7 +6,6 @@
 #include <boost/heap/binomial_heap.hpp>
 
 #include "tweetoscopeCollectorParams.hpp"
-#include "tweetoscopeProcessor.hpp"
 #include "tweetoscopeTweetReader.hpp"
 
 namespace tweetoscope{
