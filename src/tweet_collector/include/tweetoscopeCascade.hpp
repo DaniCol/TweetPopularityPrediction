@@ -14,6 +14,7 @@ namespace tweetoscope{
   class Cascade;
 
   using ref_cascade = std::shared_ptr<tweetoscope::Cascade>;
+  using refw_cascade = std::weak_ptr<tweetoscope::Cascade>;
 
   // This is the comparison functor for boost queues.
   struct ref_cascade_comparator {
