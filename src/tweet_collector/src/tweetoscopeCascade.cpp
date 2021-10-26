@@ -35,6 +35,11 @@ void tweetoscope::Cascade::update_cascade(tweetoscope::tweet& tweet) {
     this->last_event_time = tweet.time;
 }
 
+tweetoscope::timestamp tweetoscope::Cascade::get_last_event_time() const{
+    return this->last_event_time;
+};
+
+
 bool tweetoscope::ref_cascade_comparator::operator()(
     tweetoscope::ref_cascade op1,
     tweetoscope::ref_cascade op2) const {

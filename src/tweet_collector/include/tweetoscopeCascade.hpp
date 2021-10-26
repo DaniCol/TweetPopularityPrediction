@@ -58,6 +58,7 @@ namespace tweetoscope{
       bool is_dead();
       void kill();
       void update_cascade(tweetoscope::tweet& tweet);
+      tweetoscope::timestamp get_last_event_time() const; 
 
       friend std::ostream& operator<<(std::ostream &flux, Cascade const& cascade);
   };
