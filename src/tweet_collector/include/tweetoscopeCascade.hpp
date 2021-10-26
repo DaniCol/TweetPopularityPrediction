@@ -6,7 +6,6 @@
 #include <boost/heap/binomial_heap.hpp>
 
 #include "tweetoscopeCollectorParams.hpp"
-#include "tweetoscopeProcessor.hpp"
 #include "tweetoscopeTweetReader.hpp"
 
 namespace tweetoscope{
@@ -14,6 +13,7 @@ namespace tweetoscope{
   class Cascade;
 
   using ref_cascade = std::shared_ptr<tweetoscope::Cascade>;
+  using refw_cascade = std::weak_ptr<tweetoscope::Cascade>;
 
   // This is the comparison functor for boost queues.
   struct ref_cascade_comparator {
@@ -58,6 +58,7 @@ namespace tweetoscope{
       bool is_dead();
       void kill();
       void update_cascade(tweetoscope::tweet& tweet);
+      tweetoscope::timestamp get_last_event_time() const; 
 
       friend std::ostream& operator<<(std::ostream &flux, Cascade const& cascade);
   };
