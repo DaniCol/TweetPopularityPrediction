@@ -25,7 +25,7 @@ namespace tweetoscope{
 
             tweetoscope::priority_queue cascades;
             std::map<tweetoscope::timestamp, std::queue<tweetoscope::refw_cascade>> partial_cascades;
-            std::map<tweetoscope::source::idf, tweetoscope::ref_cascade> symbol_table;
+            std::map<tweetoscope::cascade::idf, tweetoscope::ref_cascade> symbol_table;
 
         // Class methods
             void process_tweet(tweetoscope::cascade::idf key, tweetoscope::tweet& tweet);

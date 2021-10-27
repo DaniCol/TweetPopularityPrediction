@@ -16,18 +16,22 @@ void tweetoscope::Processor::process(tweetoscope::cascade::idf key, tweetoscope:
 
 void tweetoscope::Processor::process_tweet(tweetoscope::cascade::idf key, tweetoscope::tweet& tweet){
 
-    std::cout <<"PROCESS TWEET" << std::endl;
+    std::cout <<"PROCESS TWEET" << key << std::endl;
 
     ref_cascade ref = tweetoscope::make_cascade(key,tweet);
 
+    std::cout << *ref << std::endl;
+
     ref->location = this->cascades.push(ref);
+
+    // symbol_table.insert({key,tweet});
     
-    extract_cascade(tweet.time);
+    // extract_cascade(tweet.time);
 }
 
 
 void tweetoscope::Processor::process_retweet(tweetoscope::tweet& retweet){
-    std::cout <<"PROCESS RETWEET" << std::endl;
+    // std::cout <<"PROCESS RETWEET" << std::endl;
     
 }
 
@@ -38,6 +42,9 @@ void tweetoscope::Processor::extract_cascade(tweetoscope::timestamp current_twee
     while(!clear){
         auto cascade = cascades.top();
         if(cascade!=nullptr){
+            std::cout << "Duration : " << current_tweet_time - cascade->get_last_event_time() << std::endl;
+            std::cout << "Max Duration : " << this->max_duration << std::endl;
+
             if(current_tweet_time - cascade->get_last_event_time() > this->max_duration){
                 std::cout << "POPPED: " << *cascade << std::endl;
                 cascades.pop();

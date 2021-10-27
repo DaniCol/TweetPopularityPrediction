@@ -33,10 +33,8 @@ int main(int argc, char* argv[]) {
         
   unsigned int i = 0;
 
-  while(i<100){
+  while(true){
     auto msg = consumer.poll();
-
-    // std::cout << msg.get_error() << std::endl;
 
     if( msg && ! msg.get_error() ) {
 
