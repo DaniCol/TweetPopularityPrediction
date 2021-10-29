@@ -2,28 +2,16 @@ import numpy as np
 import scipy.optimize as optim
 import argparse                   # To parse command line arguments
 import json                       # To parse and dump JSON
+import sys 
+import os 
 
 from kafka import KafkaConsumer   # Import Kafka consumer
 from kafka import KafkaProducer   # Import Kafka producder
+
+sys.path.append(os.path.abspath("/home/tweetoscope/src/hawkes_estimator"))
 from src.map import compute_MAP
 from src.prediction import prediction
-from src.fake_data import create_fake_data
 
-
-
-
-def publish_fake_data():
-    data = create_fake_data()
-
-    # Init the producer
-    producer = KafkaProducer(
-                            bootstrap_servers = args.broker_list,                     # List of brokers passed from the command line
-                            value_serializer=lambda v: json.dumps(v).encode('utf-8'), # How to serialize the value to a binary buffer
-                            key_serializer=str.encode                                 # How to serialize the key
-                            )
-
-    producer.send('cascade_series', key = data[0], value = data[1])
-    producer.flush()
 
 def main(args):
     # Listen to the cascade_series topic 
@@ -60,13 +48,13 @@ def main(args):
         f, params = compute_MAP(history, t, alpha, mu)
 
         # Predict the number of retweet with the estimated parameters
-        Ntot = pprediction(params, history, alpha, mu, t)
-
+        Ntot = prediction(params, history, alpha, mu, t)
+        
         # Build the message to send to the Kafka Topic
-        value = { 'type': 'parameters', 'cid': v['cid'], 'msg' : v['msg'], 'n_obs': history.shape[0], 'n_supp' : Ntot, 'params': params }
+        value = { 'type': 'parameters', 'cid': v['cid'], 'msg' : v['msg'], 'n_obs': history.shape[0], 'n_supp' : Ntot, 'params': params.tolist() }
 
         # Send the message to the 'cascade_properties' topic 
-        producer.send('cascade_properties', key = t, value = value)
+        producer.send('cascade_properties', key = str(t), value = value)
 
     producer.flush() # Flush: force purging intermediate buffers before leaving
 
@@ -79,11 +67,6 @@ if __name__ == "__main__":
 
     # Parse arguments
     args = parser.parse_args()  
-
-
-    for i in range(60):
-        publish_fake_data() 
-
 
     # Start the main loop 
     main(args)

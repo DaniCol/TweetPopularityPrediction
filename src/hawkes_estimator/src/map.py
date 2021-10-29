@@ -1,7 +1,7 @@
 import numpy as np
 import scipy.optimize as optim
 
-from mle import compute_MLE, loglikelihood
+from src.mle import loglikelihood
 
 
 def compute_MAP(history, t, alpha, mu,
