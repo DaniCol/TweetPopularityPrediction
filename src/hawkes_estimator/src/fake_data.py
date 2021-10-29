@@ -1,6 +1,7 @@
 import os
 import numpy as np
 from scipy import stats
+import random 
 
 def neg_power_law(alpha, mu, size=1):
     """
@@ -65,23 +66,33 @@ def simulate_marked_exp_hawkes_process(params, m0, alpha, mu, max_size=10000):
     return T
 
 
-def format_fake_data(cascade):
-    Key = None 
-    Value = { 'type' : 'serie', 'cid': 'tw23981', 'msg' : 'blah blah', 'T_obs': 600, 'tweets': cascade }
+def data_to_kafka_message(cascade):
+    """
+    Return a tuple (key, value) to be send through a kafka topic
+
+    cascade   -- 2D-array whose rows contain marked time points
+
+    """
+    key = "1" 
+    Value = { 'type' : 'serie', 'cid': 'tw23981', 'msg' : 'blah blah', 'T_obs': cascade[-1][0], 'tweets': cascade }
     return key,Value
 
-# Simulation 
-
 def create_fake_data():
-        
+    """
+    Return simulated data formated as a tuple (key,value) ready to be sent to a kafka topic
+    """
+
+    # Init parameters
     p, beta = 0.025, 1/3600.
     alpha, mu = 2.4, 10
     m0 = 1000
     n_star = p * mu * (alpha - 1) / (alpha - 2)
     print(f"n_star = {n_star:.2f}")
-    cascade = simulate_marked_exp_hawkes_process((p,beta), m0, alpha, mu, max_size=10000)
 
-    return format_fake_data(cascade)
+    # Create simulated data and convert to python list 
+    cascade = list(simulate_marked_exp_hawkes_process((p,beta), m0, alpha, mu, max_size=10000).tolist())
+
+    return data_to_kafka_message(cascade)
 
 
 
