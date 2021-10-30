@@ -30,18 +30,15 @@ namespace tweetoscope{
         // Class methods
             void process_tweet(tweetoscope::cascade::idf key, tweetoscope::tweet& tweet);
             void process_retweet(tweetoscope::cascade::idf key, tweetoscope::tweet& retweet);
-            void extract_cascade(tweetoscope::timestamp current_tweet_time);
+            void extract_cascade(tweetoscope::cascade::idf key, tweetoscope::timestamp current_tweet_time);
 
 
         public:
         // Class constructors
-            inline Processor(ref_producer serie_producer, ref_producer properties_producer, tweetoscope::timestamp max_duration) 
-                : serie_producer(serie_producer),
-                  properties_producer(properties_producer),
-                  max_duration(max_duration),
-                  cascades(),
-                  partial_cascades(), 
-                  symbol_table() {} ;
+            Processor(  ref_producer serie_producer, 
+                        ref_producer properties_producer, 
+                        tweetoscope::timestamp max_duration,
+                        std::vector<tweetoscope::timestamp> observation_windows);
 
             Processor(const Processor&) = default;
             Processor& operator=(const Processor&) = default;

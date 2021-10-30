@@ -3,15 +3,29 @@
 
 #include "../include/tweetoscopeProcessor.hpp"
 
+tweetoscope::Processor::Processor(
+                        ref_producer serie_producer, 
+                        ref_producer properties_producer, 
+                        tweetoscope::timestamp max_duration,
+                        std::vector<tweetoscope::timestamp> observation_windows)
+                        : serie_producer(serie_producer),
+                        properties_producer(properties_producer),
+                        max_duration(max_duration),
+                        cascades(),
+                        partial_cascades(),
+                        symbol_table() 
+                        {
+                            for(auto& window: observation_windows)
+                                partial_cascades.insert(std::make_pair(window,std::queue<tweetoscope::refw_cascade>()));
+                        } ;
+
 void tweetoscope::Processor::process(tweetoscope::cascade::idf key, tweetoscope::tweet& msg){
     
-    if(msg.type == "tweet"){
+    if(msg.type == "tweet")
         process_tweet(key, msg);
-        return;
-    }
-
-    process_retweet(key,msg);
-
+    else
+        process_retweet(key,msg);
+    extract_cascade(key,msg.time);
 }
 
 void tweetoscope::Processor::process_tweet(tweetoscope::cascade::idf key, tweetoscope::tweet& tweet){
@@ -19,14 +33,14 @@ void tweetoscope::Processor::process_tweet(tweetoscope::cascade::idf key, tweeto
     std::cout <<"PROCESS TWEET" << key << std::endl;
 
     ref_cascade ref = tweetoscope::make_cascade(key,tweet);
-    
     refw_cascade refw = ref;
 
-    ref->location = this->cascades.push(ref);
+    ref->location = cascades.push(ref);
+    cascades.update(ref->location,ref);
 
     symbol_table.insert((std::make_pair(key,refw)));
 
-    extract_cascade(tweet.time);
+    // partial_cascades.at();
 
 }
 
@@ -41,7 +55,8 @@ void tweetoscope::Processor::process_retweet(tweetoscope::cascade::idf key, twee
             // std::cout <<"PROCESS RETWEET" << key << std::endl;
 
             cascade->update_cascade(retweet);
-
+            
+            cascades.update(cascade->location,cascade);
             // std::cout << *cascade << std::endl;
         }
 
@@ -51,7 +66,7 @@ void tweetoscope::Processor::process_retweet(tweetoscope::cascade::idf key, twee
 
 }
 
-void tweetoscope::Processor::extract_cascade(tweetoscope::timestamp current_tweet_time){
+void tweetoscope::Processor::extract_cascade(tweetoscope::cascade::idf key, tweetoscope::timestamp current_tweet_time){
 
     bool clear = false;
 
@@ -60,18 +75,18 @@ void tweetoscope::Processor::extract_cascade(tweetoscope::timestamp current_twee
         auto cascade = cascades.top();
 
         if(cascade!=nullptr){
-            std::cout << current_tweet_time << std::endl;
-            std::cout << cascade->get_last_event_time() << std::endl;
+            // std::cout << current_tweet_time << std::endl;
+            // std::cout << cascade->get_last_event_time() << std::endl;
 
             tweetoscope::timestamp duration_between_tweets = abs(current_tweet_time - cascade->get_last_event_time());
 
-            std::cout << "Duration between tweets : " << duration_between_tweets << "|| Max duration: " << this->max_duration << std::endl;
+            // std::cout << "Duration between tweets : " << duration_between_tweets << "|| Max duration: " << this->max_duration << std::endl;
 
             if(duration_between_tweets > this->max_duration){
-                std::cout << "POPPED" << std::endl;
+                // std::cout << "POPPED" << std::endl;
                 cascade->kill();
                 cascades.pop();
-                
+
                 // std::cout << cascade->is_dead() << std::endl;
             }else{
                 clear = true;
