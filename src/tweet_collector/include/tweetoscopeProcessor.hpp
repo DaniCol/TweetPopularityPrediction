@@ -29,7 +29,7 @@ namespace tweetoscope{
 
         // Class methods
             void process_tweet(tweetoscope::cascade::idf key, tweetoscope::tweet& tweet);
-            void process_retweet(tweetoscope::tweet& retweet);
+            void process_retweet(tweetoscope::cascade::idf key, tweetoscope::tweet& retweet);
             void extract_cascade(tweetoscope::timestamp current_tweet_time);
 
 

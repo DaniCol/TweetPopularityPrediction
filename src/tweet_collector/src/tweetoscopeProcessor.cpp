@@ -10,7 +10,7 @@ void tweetoscope::Processor::process(tweetoscope::cascade::idf key, tweetoscope:
         return;
     }
 
-    process_retweet(msg);
+    process_retweet(key,msg);
 
 }
 
@@ -19,24 +19,40 @@ void tweetoscope::Processor::process_tweet(tweetoscope::cascade::idf key, tweeto
     std::cout <<"PROCESS TWEET" << key << std::endl;
 
     ref_cascade ref = tweetoscope::make_cascade(key,tweet);
+    
     refw_cascade refw = ref;
-
-    std::cout << *ref << std::endl;
 
     ref->location = this->cascades.push(ref);
 
-    symbol_table.insert(std::make_pair(key,refw));
+    symbol_table.insert((std::make_pair(key,refw)));
     
-    auto symbol = symbol_table.at(key).lock();
-    std::cout << *symbol << std::endl;
+    // auto symbol = symbol_table.at(key).lock();
+
+    // std::cout << *symbol << std::endl;
 
     // extract_cascade(tweet.time);
+
 }
 
 
-void tweetoscope::Processor::process_retweet(tweetoscope::tweet& retweet){
-    // std::cout <<"PROCESS RETWEET" << std::endl;
-    
+void tweetoscope::Processor::process_retweet(tweetoscope::cascade::idf key, tweetoscope::tweet& retweet){
+
+    try{
+        auto cascade = symbol_table.at(key).lock();
+
+        if(cascade!=nullptr){
+
+            // std::cout <<"PROCESS RETWEET" << key << std::endl;
+            
+            cascade->update_cascade(retweet);
+
+            // std::cout << *cascade << std::endl;
+        }
+
+    }catch(std::exception& e) {
+        std::cout << "Exception caught : " << e.what() << std::endl;
+    }
+
 }
 
 void tweetoscope::Processor::extract_cascade(tweetoscope::timestamp current_tweet_time){
@@ -44,6 +60,7 @@ void tweetoscope::Processor::extract_cascade(tweetoscope::timestamp current_twee
     bool clear = false;
 
     while(!clear){
+        // auto cascade = symbol_table.at(key).lock();
         auto cascade = cascades.top();
         if(cascade!=nullptr){
             std::cout << "Duration : " << current_tweet_time - cascade->get_last_event_time() << std::endl;
