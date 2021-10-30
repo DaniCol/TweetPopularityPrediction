@@ -17,7 +17,7 @@ tweetoscope::Cascade::Cascade(tweetoscope::cascade::idf key, tweetoscope::tweet&
       alive(true) {}
 
 bool tweetoscope::Cascade::is_dead() {
-    return this->alive;
+    return !this->alive;
 }
 
 void tweetoscope::Cascade::kill() {
