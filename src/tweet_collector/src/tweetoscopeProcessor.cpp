@@ -25,12 +25,8 @@ void tweetoscope::Processor::process_tweet(tweetoscope::cascade::idf key, tweeto
     ref->location = this->cascades.push(ref);
 
     symbol_table.insert((std::make_pair(key,refw)));
-    
-    // auto symbol = symbol_table.at(key).lock();
 
-    // std::cout << *symbol << std::endl;
-
-    // extract_cascade(tweet.time);
+    extract_cascade(tweet.time);
 
 }
 
@@ -43,7 +39,7 @@ void tweetoscope::Processor::process_retweet(tweetoscope::cascade::idf key, twee
         if(cascade!=nullptr){
 
             // std::cout <<"PROCESS RETWEET" << key << std::endl;
-            
+
             cascade->update_cascade(retweet);
 
             // std::cout << *cascade << std::endl;
@@ -60,15 +56,23 @@ void tweetoscope::Processor::extract_cascade(tweetoscope::timestamp current_twee
     bool clear = false;
 
     while(!clear){
-        // auto cascade = symbol_table.at(key).lock();
-        auto cascade = cascades.top();
-        if(cascade!=nullptr){
-            std::cout << "Duration : " << current_tweet_time - cascade->get_last_event_time() << std::endl;
-            std::cout << "Max Duration : " << this->max_duration << std::endl;
 
-            if(current_tweet_time - cascade->get_last_event_time() > this->max_duration){
-                std::cout << "POPPED: " << *cascade << std::endl;
+        auto cascade = cascades.top();
+
+        if(cascade!=nullptr){
+            std::cout << current_tweet_time << std::endl;
+            std::cout << cascade->get_last_event_time() << std::endl;
+
+            tweetoscope::timestamp duration_between_tweets = abs(current_tweet_time - cascade->get_last_event_time());
+
+            std::cout << "Duration between tweets : " << duration_between_tweets << "|| Max duration: " << this->max_duration << std::endl;
+
+            if(duration_between_tweets > this->max_duration){
+                std::cout << "POPPED" << std::endl;
+                cascade->kill();
                 cascades.pop();
+                
+                // std::cout << cascade->is_dead() << std::endl;
             }else{
                 clear = true;
             }
