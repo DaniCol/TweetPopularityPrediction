@@ -33,6 +33,9 @@ int main(int argc, char* argv[]) {
         
   unsigned int i = 0;
 
+  tweetoscope::timestamp max_duration = params.times.terminated;
+  tweetoscope::Processor processor(producer1,producer2,max_duration);
+
   while(true){
     auto msg = consumer.poll();
 
@@ -43,10 +46,7 @@ int main(int argc, char* argv[]) {
       auto istr = std::istringstream(std::string(msg.get_payload()));
       istr >> twt;
 
-    tweetoscope::timestamp max_duration = params.times.terminated;
-    tweetoscope::Processor processor(producer1,producer2,max_duration);
-
-    processor.process(key, twt);
+      processor.process(key, twt);
 
     //   tweetoscope::ref_cascade ptr_cascade = tweetoscope::make_cascade(key, twt);
     //   std::cout << *ptr_cascade << std::endl;
