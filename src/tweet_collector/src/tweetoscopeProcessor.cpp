@@ -19,13 +19,17 @@ void tweetoscope::Processor::process_tweet(tweetoscope::cascade::idf key, tweeto
     std::cout <<"PROCESS TWEET" << key << std::endl;
 
     ref_cascade ref = tweetoscope::make_cascade(key,tweet);
+    refw_cascade refw = ref;
 
     std::cout << *ref << std::endl;
 
     ref->location = this->cascades.push(ref);
 
-    // symbol_table.insert({key,tweet});
+    symbol_table.insert(std::make_pair(key,refw));
     
+    auto symbol = symbol_table.at(key).lock();
+    std::cout << *symbol << std::endl;
+
     // extract_cascade(tweet.time);
 }
 
