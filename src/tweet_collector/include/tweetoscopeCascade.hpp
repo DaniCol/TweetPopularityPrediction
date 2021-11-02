@@ -54,11 +54,16 @@ namespace tweetoscope{
         return this->last_event_time < other.last_event_time;
       }
 
+      inline bool operator>(const Cascade& other) const {
+        return this->last_event_time > other.last_event_time;
+      }
+
       // Class methods
       bool is_dead();
       void kill();
       void update_cascade(tweetoscope::tweet& tweet);
       tweetoscope::timestamp get_last_event_time() const; 
+      tweetoscope::cascade::idf get_cid() const;
 
       friend std::ostream& operator<<(std::ostream &flux, Cascade const& cascade);
   };

@@ -39,11 +39,15 @@ tweetoscope::timestamp tweetoscope::Cascade::get_last_event_time() const{
     return this->last_event_time;
 };
 
+tweetoscope::cascade::idf tweetoscope::Cascade::get_cid() const{
+    return this->cid;
+}
+
 
 bool tweetoscope::ref_cascade_comparator::operator()(
     tweetoscope::ref_cascade op1,
     tweetoscope::ref_cascade op2) const {
-        return *op1 < *op2;
+        return *op1 > *op2;
 }
 
 std::ostream& tweetoscope::operator<<(std::ostream& os, tweetoscope::Cascade const& cascade) {
