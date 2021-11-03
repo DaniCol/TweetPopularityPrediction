@@ -64,7 +64,8 @@ namespace tweetoscope{
       void update_cascade(tweetoscope::tweet& tweet);
       tweetoscope::timestamp get_last_event_time() const; 
       tweetoscope::cascade::idf get_cid() const;
-      std::string cascade_to_json();
+      std::string cascade_to_json() const;
+      std::string partial_cascade_to_json(tweetoscope::timestamp time_window) const;
 
       friend std::ostream& operator<<(std::ostream& os, Cascade const& cascade);
   };

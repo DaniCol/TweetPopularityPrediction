@@ -44,11 +44,41 @@ tweetoscope::cascade::idf tweetoscope::Cascade::get_cid() const{
 }
 
 
-std::string tweetoscope::Cascade::cascade_to_json(){
+std::string tweetoscope::Cascade::cascade_to_json() const{
     return "{\"type\": \"size\", " 
             "\"cid\": " + std::to_string(this->cid) + ", " 
             "\"n_tot\": " + std::to_string(this->n_tots) + ", "
             "\"t_end\": " + std::to_string(this->last_event_time) + "}";
+}
+
+
+std::string tweetoscope::Cascade::partial_cascade_to_json(tweetoscope::timestamp time_window) const{
+    // Generate the time and the magnitude array 
+    // ex : 
+    //      times = [1, 23, 45, ...]
+    //      magnitudes = [1000, 67, 79, ...]
+
+    std::string times = "[";
+    std::string magnitudes = "[";
+    for(auto& t: this->tweets){
+        times += std::to_string(t.first) + ",";
+        magnitudes += std::to_string(t.second) + ",";
+    }
+    // Remove the last ","
+    times.pop_back();
+    magnitudes.pop_back();
+
+    // Close the array
+    times += "]";
+    magnitudes += "]";
+
+    // Return the msg as a Json
+    return "{\"type\": \"serie\", "
+            "\"cid\": " + std::to_string(this->cid) + ", "
+            "\"msg\": "+ this->msg + ", "
+            "\"T_obs\" :" + std::to_string(time_window) + ", "
+            "\"times\": " + times + ", "
+            "\"magnitudes\": " + magnitudes + "}";
 }
 
 
