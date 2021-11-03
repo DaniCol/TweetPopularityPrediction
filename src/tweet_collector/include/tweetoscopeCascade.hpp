@@ -26,7 +26,7 @@ namespace tweetoscope{
 
   
   using history = std::vector<std::pair<tweetoscope::timestamp, double>>;
-  std::ostream& operator<<(std::ostream &flux, Cascade const& cascade);
+  std::ostream& operator<<(std::ostream& os, Cascade const& cascade);
 
   class Cascade {
     private:
@@ -46,7 +46,7 @@ namespace tweetoscope{
 
     public:
       // Class constructors
-      Cascade(tweetoscope::cascade::idf key, tweetoscope::tweet& tweet);
+      Cascade(tweetoscope::tweet& tweet);
       Cascade(const Cascade&) = default;
 
       // Class operators
@@ -65,10 +65,10 @@ namespace tweetoscope{
       tweetoscope::timestamp get_last_event_time() const; 
       tweetoscope::cascade::idf get_cid() const;
 
-      friend std::ostream& operator<<(std::ostream &flux, Cascade const& cascade);
+      friend std::ostream& operator<<(std::ostream& os, Cascade const& cascade);
   };
 
-  inline ref_cascade make_cascade(tweetoscope::cascade::idf key, tweetoscope::tweet& tweet){
-      return std::make_shared<tweetoscope::Cascade>(key, tweet);
+  inline ref_cascade make_cascade(tweetoscope::tweet& tweet){
+      return std::make_shared<tweetoscope::Cascade>(tweet);
   }
 }

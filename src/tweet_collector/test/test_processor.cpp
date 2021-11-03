@@ -50,10 +50,10 @@ int main(int argc, char* argv[]) {
       auto istr = std::istringstream(std::string(msg.get_payload()));
       istr >> twt;
 
-      if(twt.source==4){
+      if(key==4){
 
-        std::cout << " SOURCE: " <<twt.source <<" TIME: " <<twt.time << std::endl;
-        processor.process(key, twt);
+        std::cout << " SOURCE: " << key <<" TIME: " <<twt.time << std::endl;
+        processor.process(twt);
 
       }
 

@@ -19,36 +19,36 @@ tweetoscope::Processor::Processor(
                                 partial_cascades.insert(std::make_pair(window,std::queue<tweetoscope::refw_cascade>()));
                         } ;
 
-void tweetoscope::Processor::process(tweetoscope::cascade::idf key, tweetoscope::tweet& msg){
+void tweetoscope::Processor::process(tweetoscope::tweet& msg){
     
     if(msg.type == "tweet")
-        process_tweet(key, msg);
+        process_tweet(msg);
     else
-        process_retweet(key,msg);
-    extract_cascade(key,msg.time);
+        process_retweet(msg);
+    extract_cascade(msg.time);
 }
 
-void tweetoscope::Processor::process_tweet(tweetoscope::cascade::idf key, tweetoscope::tweet& tweet){
+void tweetoscope::Processor::process_tweet(tweetoscope::tweet& tweet){
 
-    std::cout <<"PROCESS TWEET" << key << std::endl;
+    std::cout <<"PROCESS TWEET " << tweet.cid << std::endl;
 
-    ref_cascade ref = tweetoscope::make_cascade(key,tweet);
+    ref_cascade ref = tweetoscope::make_cascade(tweet);
     refw_cascade refw = ref;
 
     ref->location = cascades.push(ref);
     cascades.update(ref->location,ref);
 
-    symbol_table.insert((std::make_pair(key,refw)));
+    symbol_table.insert((std::make_pair(tweet.cid,refw)));
 
     // partial_cascades.at();
 
 }
 
 
-void tweetoscope::Processor::process_retweet(tweetoscope::cascade::idf key, tweetoscope::tweet& retweet){
+void tweetoscope::Processor::process_retweet(tweetoscope::tweet& retweet){
 
     try{
-        auto cascade = symbol_table.at(key).lock();
+        auto cascade = symbol_table.at(retweet.cid).lock();
 
         if(cascade!=nullptr){
 
@@ -66,7 +66,7 @@ void tweetoscope::Processor::process_retweet(tweetoscope::cascade::idf key, twee
 
 }
 
-void tweetoscope::Processor::extract_cascade(tweetoscope::cascade::idf key, tweetoscope::timestamp current_tweet_time){
+void tweetoscope::Processor::extract_cascade(tweetoscope::timestamp current_tweet_time){
 
     bool clear = false;
 

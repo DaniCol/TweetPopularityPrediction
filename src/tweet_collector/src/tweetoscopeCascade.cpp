@@ -8,10 +8,10 @@
 #include "../include/tweetoscopeTweetReader.hpp"
 
 
-tweetoscope::Cascade::Cascade(tweetoscope::cascade::idf key, tweetoscope::tweet& tweet)
+tweetoscope::Cascade::Cascade(tweetoscope::tweet& tweet)
     : last_event_time(tweet.time),
       tweets({{tweet.time, tweet.magnitude}}),
-      cid(key),
+      cid(tweet.cid),
       msg(tweet.msg),
       n_tots(1),
       alive(true) {}

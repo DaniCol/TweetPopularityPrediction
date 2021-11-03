@@ -28,9 +28,9 @@ namespace tweetoscope{
             std::map<tweetoscope::cascade::idf, tweetoscope::refw_cascade> symbol_table;
 
         // Class methods
-            void process_tweet(tweetoscope::cascade::idf key, tweetoscope::tweet& tweet);
-            void process_retweet(tweetoscope::cascade::idf key, tweetoscope::tweet& retweet);
-            void extract_cascade(tweetoscope::cascade::idf key, tweetoscope::timestamp current_tweet_time);
+            void process_tweet(tweetoscope::tweet& tweet);
+            void process_retweet(tweetoscope::tweet& retweet);
+            void extract_cascade(tweetoscope::timestamp current_tweet_time);
 
 
         public:
@@ -47,7 +47,7 @@ namespace tweetoscope{
 
 
         // Class methods
-            void process(tweetoscope::cascade::idf key, tweetoscope::tweet& msg);
+            void process(tweetoscope::tweet& msg);
             void publish_cascade_serie();
             void publish_cascade_properties();
             std::string create_serie_msg();

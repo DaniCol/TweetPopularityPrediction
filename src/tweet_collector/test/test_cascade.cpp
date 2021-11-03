@@ -34,7 +34,7 @@ int main(int argc, char* argv[]) {
       auto istr = std::istringstream(std::string(msg.get_payload()));
       istr >> twt;
 
-      tweetoscope::ref_cascade ptr_cascade = tweetoscope::make_cascade(key, twt);
+      tweetoscope::ref_cascade ptr_cascade = tweetoscope::make_cascade(twt);
       std::cout << *ptr_cascade << std::endl;
       i += 1;
       // producer.post_msg(std::to_string(key), std::string(msg.get_payload()));
