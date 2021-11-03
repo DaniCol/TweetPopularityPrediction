@@ -44,6 +44,14 @@ tweetoscope::cascade::idf tweetoscope::Cascade::get_cid() const{
 }
 
 
+std::string tweetoscope::Cascade::cascade_to_json(){
+    return "{\"type\": \"size\", " 
+            "\"cid\": " + std::to_string(this->cid) + ", " 
+            "\"n_tot\": " + std::to_string(this->n_tots) + ", "
+            "\"t_end\": " + std::to_string(this->last_event_time) + "}";
+}
+
+
 bool tweetoscope::ref_cascade_comparator::operator()(
     tweetoscope::ref_cascade op1,
     tweetoscope::ref_cascade op2) const {
