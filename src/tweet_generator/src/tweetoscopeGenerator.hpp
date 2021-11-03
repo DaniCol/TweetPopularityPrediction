@@ -478,7 +478,7 @@ namespace tweetoscope {
     os << ", \"msg\": \"" << tweet.msg << '"'
        << ", \"t\": " << tweet.time 
        << ", \"m\": " << tweet.magnitude 
-       << ", \"source\": " << evt.source_id
+       << ", \"tweet_id\": " << evt.id()
        << ", \"info\": \"cascade=" << evt.cascade_id << '"' 
        << '}';
     return os;
