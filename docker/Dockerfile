@@ -22,5 +22,8 @@ RUN /install_script/install_boost.sh
 COPY ./install_script/install_cppkafka.sh  /install_script/install_cppkafka.sh 
 RUN /install_script/install_cppkafka.sh
 
+COPY ./install_script/install_python_packages.sh  /install_script/install_python_packages.sh 
+RUN /install_script/install_python_packages.sh
+
 COPY ./entrypoint.sh entrypoint.sh
 ENTRYPOINT ["./entrypoint.sh"]
