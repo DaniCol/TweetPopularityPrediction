@@ -82,3 +82,5 @@ python3 hawkes_estimator.py --broker-list localhost:9092
 cd /home/tweetoscope/src/kafka_logger/debug_kafka.py
 python3 debug_kafka.py --broker-list localhost:9092
 ```
+
+
