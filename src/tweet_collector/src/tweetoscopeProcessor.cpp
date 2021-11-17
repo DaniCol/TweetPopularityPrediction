@@ -68,32 +68,17 @@ void tweetoscope::Processor::process_retweet(tweetoscope::tweet& retweet){
 
 void tweetoscope::Processor::extract_cascade(tweetoscope::timestamp current_tweet_time){
 
-    bool clear = false;
-
-    while(!clear){
-
+    while(!cascades.empty() && 
+          current_tweet_time - cascades.top()->get_last_event_time() > this->max_duration){
+        // Kill the cascade
         auto cascade = cascades.top();
+        cascade->kill();
 
-        if(cascade!=nullptr){
-            // std::cout << current_tweet_time << std::endl;
-            // std::cout << cascade->get_last_event_time() << std::endl;
-
-            tweetoscope::timestamp duration_between_tweets = abs(current_tweet_time - cascade->get_last_event_time());
-
-            // std::cout << "Duration between tweets : " << duration_between_tweets << "|| Max duration: " << this->max_duration << std::endl;
-
-            if(duration_between_tweets > this->max_duration){
-                // std::cout << "POPPED" << std::endl;
-                cascade->kill();
-                cascades.pop();
-
-                // std::cout << cascade->is_dead() << std::endl;
-            }else{
-                clear = true;
-            }
-        } else{
-            clear = true;
-        }
+        // Publish in cascade properties
+        this->publish_cascade_properties();
+        
+        // Pop from the priority queue
+        cascades.pop();   
     }
 }
 
