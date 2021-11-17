@@ -1,3 +1,4 @@
+#pragma once
 #include <string>
 #include <iostream>
 #include <cstddef>
@@ -17,7 +18,7 @@ namespace tweetoscope {
     std::string msg  = "";
     timestamp time   = 0;
     double magnitude = 0;
-    source::idf source = 0;
+    cascade::idf cid = 0;
     std::string info = "";
   };
 
@@ -49,7 +50,7 @@ namespace tweetoscope {
       else if(tag == "info")    t.info = get_string_val(is);
       else if(tag == "t")       is >> t.time;
       else if(tag == "m")       is >> t.magnitude;
-      else if(tag == "source")  is >> t.source;
+      else if(tag == "tweet_id")  is >> t.cid;
             
       is >> c; // eats either } or ,
       if(c == ',')

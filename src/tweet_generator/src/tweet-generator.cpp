@@ -99,7 +99,7 @@ int main(int argc, char* argv[]) {
 	    // This tag is used when serializing the event
 	    evt.source_id = thread_id;
 
-	    auto key = std::to_string(evt.id());
+	    auto key = std::to_string(evt.source_id);
 	    builder.key(key);
 
 	    std::ostringstream ostr;

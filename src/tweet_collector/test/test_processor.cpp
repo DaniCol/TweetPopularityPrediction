@@ -58,6 +58,13 @@ int main(int argc, char* argv[]) {
       }
 
       processors[key]->process(twt);
+
+    //   tweetoscope::ref_cascade ptr_cascade = tweetoscope::make_cascade(key, twt);
+    //   std::cout << *ptr_cascade << std::endl;
+    //   i += 1;
+      // producer.post_msg(std::to_string(key), std::string(msg.get_payload()));
+      // std::cout << key << ": ";
+      // std::cout << std::string(msg.get_payload()) << std::endl;
     }
   }
   return 0;
