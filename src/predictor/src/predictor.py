@@ -1,5 +1,5 @@
 from time import time
-from cascade import Cascade
+from .cascade import Cascade
 
 class BasicEstimator:
     def __init__(self) -> None:

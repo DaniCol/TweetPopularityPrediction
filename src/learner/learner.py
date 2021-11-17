@@ -38,7 +38,7 @@ def main(args):
         if msg.key not in estimators_collection.keys():
             estimators_collection[msg.key] = Estimator(key=msg.key, value=msg.value)
 
-        has_been_fit = estimators_collection[msg.key].handle()
+        has_been_fit = estimators_collection[msg.key].handle(msg.value)
 
         if has_been_fit:
             producer.send('models', key = msg.key, value = estimators_collection[msg.key].estimator)

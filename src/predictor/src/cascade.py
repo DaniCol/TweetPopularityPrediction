@@ -3,7 +3,7 @@ import numpy as np
 
 class Cascade:
     
-    def __init__(self, cid, tweet_msg) -> None:
+    def __init__(self, cid) -> None:
         self.cid = cid
         self.tweet_msg = ''
 
@@ -97,5 +97,5 @@ class Cascade:
             't_end': msg['t_end']
         }
         # Compute the real w value (for the RF)
-        self.windows[time_window]['size']['W'] = self.compute_w_reel()
+        self.windows[time_window]['size']['W'] = self.compute_w_reel(time_window)
 

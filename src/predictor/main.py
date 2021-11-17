@@ -25,11 +25,12 @@ class MessageHandler:
 
 def main(args):
     # Listen to the cascade_series topic 
-    consumer = KafkaConsumer(['cascade_properties', 'models'],                           # Topics name
-                            bootstrap_servers = args.broker_list,                        # List of brokers passed from the command line
+    consumer = KafkaConsumer(bootstrap_servers = args.broker_list,                       # List of brokers passed from the command line
                             value_deserializer=lambda v: MessageHandler.deserializer(v), # How to deserialize the value from a binary buffer
                             key_deserializer= lambda v: v.decode()                       # How to deserialize the key (if any)
                             )
+    # Subscribe to topics
+    consumer.subscribe(['cascade_properties', 'models'])
 
     # Init the producer
     producer = KafkaProducer(
