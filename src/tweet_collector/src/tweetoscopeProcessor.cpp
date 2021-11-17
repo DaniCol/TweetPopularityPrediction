@@ -38,10 +38,14 @@ void tweetoscope::Processor::process_tweet(tweetoscope::tweet& tweet){
     ref->location = cascades.push(ref);
     cascades.update(ref->location,ref);
 
+    // Add the cascade to the symbol table
     symbol_table.insert((std::make_pair(tweet.cid,refw)));
 
-    // partial_cascades.at();
-
+    // Add the cascade to partial cascade
+    std::map<tweetoscope::timestamp, std::queue<tweetoscope::refw_cascade>>::iterator it;
+    for (it = partial_cascades.begin(); it != partial_cascades.end(); it++){
+        it->second.push(refw);
+    }
 }
 
 
@@ -76,7 +80,7 @@ void tweetoscope::Processor::extract_cascade(tweetoscope::timestamp current_twee
 
         // Publish in cascade properties
         this->publish_cascade_properties();
-        
+
         // Pop from the priority queue
         cascades.pop();   
     }
