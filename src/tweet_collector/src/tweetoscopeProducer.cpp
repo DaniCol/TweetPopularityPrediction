@@ -16,3 +16,7 @@ tweetoscope::Producer::Producer(tweetoscope::params::collector& params, std::str
 void tweetoscope::Producer::post_msg(std::string key, std::string msg){
   this->produce(cppkafka::MessageBuilder(this->topic).key(key).payload(msg));
 }
+
+void tweetoscope::Producer::post_msg(std::string msg){
+  this->produce(cppkafka::MessageBuilder(this->topic).payload(msg));
+}

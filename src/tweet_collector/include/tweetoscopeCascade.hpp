@@ -6,7 +6,6 @@
 #include <boost/heap/binomial_heap.hpp>
 
 #include "tweetoscopeCollectorParams.hpp"
-#include "tweetoscopeProcessor.hpp"
 #include "tweetoscopeTweetReader.hpp"
 
 namespace tweetoscope{
@@ -14,6 +13,7 @@ namespace tweetoscope{
   class Cascade;
 
   using ref_cascade = std::shared_ptr<tweetoscope::Cascade>;
+  using refw_cascade = std::weak_ptr<tweetoscope::Cascade>;
 
   // This is the comparison functor for boost queues.
   struct ref_cascade_comparator {
@@ -26,17 +26,19 @@ namespace tweetoscope{
 
   
   using history = std::vector<std::pair<tweetoscope::timestamp, double>>;
-  std::ostream& operator<<(std::ostream &flux, Cascade const& cascade);
+  std::ostream& operator<<(std::ostream& os, Cascade const& cascade);
 
   class Cascade {
     private:
       // Class attributes
-      tweetoscope::timestamp      last_event_time;
-      tweetoscope::history        tweets;
-      tweetoscope::cascade::idf   cid;
-      std::string                 msg;
-      unsigned int                n_tots;
-      bool                        alive;
+      tweetoscope::timestamp              last_event_time;
+      tweetoscope::timestamp              first_event_time;
+      tweetoscope::history                tweets;
+      tweetoscope::cascade::idf           cid;
+      std::string                         msg;
+      unsigned int                        n_tots;
+      bool                                alive;
+      std::vector<tweetoscope::timestamp> windows;
         
     public:
       priority_queue::handle_type location; // This is "where" the element
@@ -46,7 +48,7 @@ namespace tweetoscope{
 
     public:
       // Class constructors
-      Cascade(tweetoscope::cascade::idf key, tweetoscope::tweet& tweet);
+      Cascade(tweetoscope::tweet& tweet);
       Cascade(const Cascade&) = default;
 
       // Class operators
@@ -54,15 +56,26 @@ namespace tweetoscope{
         return this->last_event_time < other.last_event_time;
       }
 
+      inline bool operator>(const Cascade& other) const {
+        return this->last_event_time > other.last_event_time;
+      }
+
       // Class methods
       bool is_dead();
       void kill();
       void update_cascade(tweetoscope::tweet& tweet);
+      void add_time_window(tweetoscope::timestamp time_window);
+      tweetoscope::timestamp get_last_event_time() const; 
+      tweetoscope::timestamp get_first_event_time() const; 
+      tweetoscope::cascade::idf get_cid() const;
+      std::vector<tweetoscope::timestamp> get_windows() const; 
+      std::string cascade_to_json() const;
+      std::string partial_cascade_to_json(tweetoscope::timestamp time_window) const;
 
-      friend std::ostream& operator<<(std::ostream &flux, Cascade const& cascade);
+      friend std::ostream& operator<<(std::ostream& os, Cascade const& cascade);
   };
 
-  inline ref_cascade make_cascade(tweetoscope::cascade::idf key, tweetoscope::tweet& tweet){
-      return std::make_shared<tweetoscope::Cascade>(key, tweet);
+  inline ref_cascade make_cascade(tweetoscope::tweet& tweet){
+      return std::make_shared<tweetoscope::Cascade>(tweet);
   }
 }

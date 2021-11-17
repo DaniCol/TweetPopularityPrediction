@@ -9,7 +9,7 @@ tweetoscope::Consumer::Consumer(tweetoscope::params::collector& params)
       cppkafka::Configuration{
         { "metadata.broker.list", params.kafka.brokers},
         { "enable.auto.commit", false },
-        { "auto.offset.reset", "earliest" },
+        { "auto.offset.reset", "latest" },
         { "group.id", "tweetoscopeConsumer" }
       }
     ), 
