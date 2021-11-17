@@ -87,9 +87,8 @@ void tweetoscope::Processor::extract_cascade(tweetoscope::timestamp current_twee
         cascade->kill();
 
         // Publish in cascade properties
-        std::map<tweetoscope::timestamp, std::queue<tweetoscope::refw_cascade>>::iterator it;
-        for (it = partial_cascades.begin(); it != partial_cascades.end(); it++){
-            this->publish_cascade_properties(cascade, it->first);
+        for(auto& time_window : cascade->get_windows()){
+            this->publish_cascade_properties(cascade, time_window);
         }
 
         // Pop from the priority queue
@@ -106,6 +105,8 @@ void tweetoscope::Processor::extract_from_partial_cascade(tweetoscope::timestamp
                 && current_tweet_time - it->second.front().lock()->get_first_event_time() > it->first){
                 
                 auto cascade = it->second.front().lock();
+
+                cascade->add_time_window(it->first);
 
                 // Publish in cascade properties
                 this->publish_cascade_serie(cascade, it->first);

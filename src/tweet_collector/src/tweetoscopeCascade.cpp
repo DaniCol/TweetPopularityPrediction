@@ -15,7 +15,8 @@ tweetoscope::Cascade::Cascade(tweetoscope::tweet& tweet)
       cid(tweet.cid),
       msg(tweet.msg),
       n_tots(1),
-      alive(true) {}
+      alive(true),
+      windows() {}
 
 bool tweetoscope::Cascade::is_dead() {
     return !this->alive;
@@ -92,6 +93,14 @@ bool tweetoscope::ref_cascade_comparator::operator()(
     tweetoscope::ref_cascade op2) const {
         return *op1 > *op2;
 }
+
+void tweetoscope::Cascade::add_time_window(tweetoscope::timestamp time_window){
+    this->windows.push_back(time_window);
+}
+
+std::vector<tweetoscope::timestamp> tweetoscope::Cascade::get_windows() const{
+    return this->windows;
+} 
 
 std::ostream& tweetoscope::operator<<(std::ostream& os, tweetoscope::Cascade const& cascade) {
     std::cout.precision(0);

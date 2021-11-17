@@ -31,13 +31,14 @@ namespace tweetoscope{
   class Cascade {
     private:
       // Class attributes
-      tweetoscope::timestamp      last_event_time;
-      tweetoscope::timestamp      first_event_time;
-      tweetoscope::history        tweets;
-      tweetoscope::cascade::idf   cid;
-      std::string                 msg;
-      unsigned int                n_tots;
-      bool                        alive;
+      tweetoscope::timestamp              last_event_time;
+      tweetoscope::timestamp              first_event_time;
+      tweetoscope::history                tweets;
+      tweetoscope::cascade::idf           cid;
+      std::string                         msg;
+      unsigned int                        n_tots;
+      bool                                alive;
+      std::vector<tweetoscope::timestamp> windows;
         
     public:
       priority_queue::handle_type location; // This is "where" the element
@@ -63,9 +64,11 @@ namespace tweetoscope{
       bool is_dead();
       void kill();
       void update_cascade(tweetoscope::tweet& tweet);
+      void add_time_window(tweetoscope::timestamp time_window);
       tweetoscope::timestamp get_last_event_time() const; 
       tweetoscope::timestamp get_first_event_time() const; 
       tweetoscope::cascade::idf get_cid() const;
+      std::vector<tweetoscope::timestamp> get_windows() const; 
       std::string cascade_to_json() const;
       std::string partial_cascade_to_json(tweetoscope::timestamp time_window) const;
 
