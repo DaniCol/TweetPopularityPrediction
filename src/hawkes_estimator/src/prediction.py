@@ -26,4 +26,4 @@ def prediction(params, history, alpha, mu, t):
     mis = history[I,1]
     G1 = p * np.sum(mis * np.exp(-beta * (t - tis)))
     Ntot = n + G1 / (1. - n_star)
-    return Ntot
+    return Ntot, G1, n_star
