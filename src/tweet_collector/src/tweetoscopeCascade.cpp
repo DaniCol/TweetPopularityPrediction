@@ -10,6 +10,7 @@
 
 tweetoscope::Cascade::Cascade(tweetoscope::tweet& tweet)
     : last_event_time(tweet.time),
+      first_event_time(tweet.time),
       tweets({{tweet.time, tweet.magnitude}}),
       cid(tweet.cid),
       msg(tweet.msg),
@@ -37,6 +38,10 @@ void tweetoscope::Cascade::update_cascade(tweetoscope::tweet& tweet) {
 
 tweetoscope::timestamp tweetoscope::Cascade::get_last_event_time() const{
     return this->last_event_time;
+};
+
+tweetoscope::timestamp tweetoscope::Cascade::get_first_event_time() const{
+    return this->first_event_time;
 };
 
 tweetoscope::cascade::idf tweetoscope::Cascade::get_cid() const{

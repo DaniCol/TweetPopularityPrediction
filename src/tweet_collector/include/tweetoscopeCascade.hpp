@@ -32,6 +32,7 @@ namespace tweetoscope{
     private:
       // Class attributes
       tweetoscope::timestamp      last_event_time;
+      tweetoscope::timestamp      first_event_time;
       tweetoscope::history        tweets;
       tweetoscope::cascade::idf   cid;
       std::string                 msg;
@@ -63,6 +64,7 @@ namespace tweetoscope{
       void kill();
       void update_cascade(tweetoscope::tweet& tweet);
       tweetoscope::timestamp get_last_event_time() const; 
+      tweetoscope::timestamp get_first_event_time() const; 
       tweetoscope::cascade::idf get_cid() const;
       std::string cascade_to_json() const;
       std::string partial_cascade_to_json(tweetoscope::timestamp time_window) const;
