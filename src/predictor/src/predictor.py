@@ -55,5 +55,10 @@ class Predictor:
             stat_msg = self.cascades[value['cid']].generate_stat_msg(time_window=time_window)
             self.producer.send('stat', key = str(time_window), value = stat_msg)
 
-
-
+            # Check if the cascade is over
+            is_finished = True
+            for time_window in self.cascades[value['cid']].windows.keys():
+                is_finished = is_finished and bool(self.cascades[value['cid']].windows[time_window]['size'])
+            
+            if is_finished:
+                del self.cascades[value['cid']]

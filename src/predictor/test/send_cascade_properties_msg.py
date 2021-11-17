@@ -5,6 +5,7 @@ import sys
 import os 
 import argparse  
 import json  
+import time
 
 from kafka import KafkaProducer   # Import Kafka producder
 
@@ -38,6 +39,7 @@ def main(args):
                 }
                 print(f'publish_parameter : time_window : {time_window}, cid {cid}')
                 producer.send('cascade_properties', key = str(time_window), value = value)
+                time.sleep(1)
 
         for cid in stage[i]:
             for time_window in [600, 1200, 1800, 2400]:
@@ -49,7 +51,6 @@ def main(args):
                 }
                 print(f'publish_size : time_window : {time_window}, cid {cid}')
                 producer.send('cascade_properties', key = str(time_window), value = value)
-
     producer.flush() # Flush: force purging intermediate buffers before leaving
 
 if __name__ == "__main__":
