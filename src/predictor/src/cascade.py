@@ -66,7 +66,7 @@ class Cascade:
                 self.windows[time_window]['parameters']['params']['G1']
             ]
         n_supp = self.windows[time_window]['parameters']['n_obs'] +                 \
-                 model.predict(X=np.array(X))[0] *                                  \
+                 model.predict(X=np.array(X).reshape(1, -1))[0] *                   \
                  self.windows[time_window]['parameters']['params']['G1'] /          \
                  (1 - self.windows[time_window]['parameters']['params']['n_star'])
         
@@ -90,7 +90,7 @@ class Cascade:
     def handle_size_type_msg(self, time_window, msg):
         if self.add_new_window(time_window=time_window):
             # Raise error because received size before params
-            return 
+            print("ERROR : Cascade doesn't exist") 
         
         self.windows[time_window]['size'] = {
             'n_tot': msg['n_tot'],
