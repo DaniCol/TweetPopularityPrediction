@@ -48,10 +48,16 @@ def main(args):
         f, params = compute_MAP(history, t, alpha, mu)
 
         # Predict the number of retweet with the estimated parameters
-        Ntot = prediction(params, history, alpha, mu, t)
-        
+        _, G1, n_star = prediction(params, history, alpha, mu, t)
+
         # Build the message to send to the Kafka Topic
-        value = { 'type': 'parameters', 'cid': v['cid'], 'msg' : v['msg'], 'n_obs': history.shape[0], 'n_supp' : Ntot, 'params': params.tolist() }
+        value = {
+            'type': 'parameters',
+            'cid': v['cid'],
+            'msg' : v['msg'],
+            'n_obs': history.shape[0],
+            'params': [params[1], n_star, G1]
+        }
 
         # Send the message to the 'cascade_properties' topic 
         producer.send('cascade_properties', key = str(t), value = value)
