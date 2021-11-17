@@ -19,6 +19,7 @@ namespace tweetoscope{
 
       // Class method
       void post_msg(std::string key, std::string msg);
+      void post_msg(std::string msg);
   };
 
   inline ref_producer make_producer(tweetoscope::params::collector& params, std::string out_topic){
