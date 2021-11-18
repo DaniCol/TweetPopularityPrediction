@@ -59,32 +59,25 @@ std::string tweetoscope::Cascade::cascade_to_json() const{
 
 
 std::string tweetoscope::Cascade::partial_cascade_to_json(tweetoscope::timestamp time_window) const{
-    // Generate the time and the magnitude array 
+    // Generate the tweets array 
     // ex : 
-    //      times = [1, 23, 45, ...]
-    //      magnitudes = [1000, 67, 79, ...]
-
-    std::string times = "[";
-    std::string magnitudes = "[";
+    //      tweets = [(1, 1000), (23, 63), (45, 79), ...]
+    std::string tweets = "[";
     for(auto& t: this->tweets){
-        times += std::to_string(t.first) + ",";
-        magnitudes += std::to_string(t.second) + ",";
+        tweets += "[" + std::to_string(t.first) + "," + std::to_string(t.second) + "],";
     }
     // Remove the last ","
-    times.pop_back();
-    magnitudes.pop_back();
+    tweets.pop_back();
 
     // Close the array
-    times += "]";
-    magnitudes += "]";
+    tweets += "]";
 
     // Return the msg as a Json
     return "{\"type\": \"serie\", "
             "\"cid\": " + std::to_string(this->cid) + ", "
-            "\"msg\": "+ this->msg + ", "
+            "\"msg\": \"Empty msg\", "
             "\"T_obs\" :" + std::to_string(time_window) + ", "
-            "\"times\": " + times + ", "
-            "\"magnitudes\": " + magnitudes + "}";
+            "\"tweets\": " + tweets + "}";
 }
 
 
