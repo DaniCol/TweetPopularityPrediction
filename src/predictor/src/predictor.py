@@ -1,4 +1,3 @@
-from time import time
 from .cascade import Cascade
 
 class BasicEstimator:
@@ -9,9 +8,11 @@ class BasicEstimator:
 
 class Predictor:
     
-    def __init__(self, producer) -> None:
+    def __init__(self, producer, time_windows) -> None:
         # Kafka Producer
         self.producer = producer
+        # Time when partial cascade are published
+        self.time_windows = time_windows
         # All the trained RF
         self.predictors_collection = {}
         # Cascades 
@@ -25,7 +26,7 @@ class Predictor:
     def handle_properties_msg(self, time_window, value):
         # Create the cascade object 
         if value['cid'] not in self.cascades.keys():
-            self.cascades[value['cid']] = Cascade(cid=value['cid'])
+            self.cascades[value['cid']] = Cascade(cid=value['cid'], time_windows=self.time_windows)
         
         # Manage Hawkes Estimator messages
         if value['type'] == 'parameters':
@@ -33,15 +34,14 @@ class Predictor:
                 time_window=time_window,
                 msg=value
             )
-            
+            # Predict tweet popularity
             self.cascades[value['cid']].predict(
                 time_window=time_window,
                 model=self.predictors_collection.get(time_window, BasicEstimator())
             )
-
-            alert_msg = self.cascades[value['cid']].generate_alert_msg(time_window=time_window)
-            self.producer.send('alert', key = str(time_window), value = alert_msg)
-
+            # Publish msg on alert topic
+            self.cascades[value['cid']].publish_alert(producer=self.producer, time_window=time_window)
+        
         # Manage Tweet Collector messages  
         elif value['type'] == 'size':
             self.cascades[value['cid']].handle_size_type_msg(
@@ -49,16 +49,8 @@ class Predictor:
                 msg=value
                 )
 
-            sample_msg = self.cascades[value['cid']].generate_sample_msg(time_window=time_window)
-            self.producer.send('samples', key = str(time_window), value = sample_msg)
-
-            stat_msg = self.cascades[value['cid']].generate_stat_msg(time_window=time_window)
-            self.producer.send('stat', key = str(time_window), value = stat_msg)
-
-            # Check if the cascade is over
-            is_finished = True
-            for time_window in self.cascades[value['cid']].windows.keys():
-                is_finished = is_finished and bool(self.cascades[value['cid']].windows[time_window]['size'])
-            
-            if is_finished:
-                del self.cascades[value['cid']]
+        if self.cascades[value['cid']].clean_memory():
+            # Publish msg_s on sample and stat topics
+            self.cascades[value['cid']].publish_sample_and_stat(producer=self.producer)
+            # Free memory by deleting the cascade
+            del self.cascades[value['cid']]

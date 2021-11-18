@@ -1,14 +1,10 @@
 import numpy as np
-import scipy.optimize as optim
 import argparse                   # To parse command line arguments
 import json                       # To parse and dump JSON
-import sys 
-import os 
 
 from kafka import KafkaConsumer   # Import Kafka consumer
 from kafka import KafkaProducer   # Import Kafka producder
 
-sys.path.append(os.path.abspath("/home/tweetoscope/src/hawkes_estimator"))
 from src.map import compute_MAP
 from src.prediction import prediction
 
@@ -18,7 +14,6 @@ def main(args):
     consumer = KafkaConsumer('cascade_series',                                           # Topic name
                             bootstrap_servers = args.broker_list,                        # List of brokers passed from the command line
                             value_deserializer=lambda v: json.loads(v.decode('utf-8')),  # How to deserialize the value from a binary buffer
-                            key_deserializer= lambda v: v.decode()                       # How to deserialize the key (if any)
                             )
 
     # Init the producer
@@ -37,6 +32,7 @@ def main(args):
 
         # Get the history : [(t1,m1), (t2,m2), ....] --> np.array(n,2)
         history = np.array(v['tweets'])
+        history[:,0] -= history[0,0]
 
         # Get the current time (end of the observation window)
         t = v['T_obs']
