@@ -2,13 +2,10 @@ import numpy as np
 import scipy.optimize as optim
 import argparse                   # To parse command line arguments
 import json                       # To parse and dump JSON
-import sys 
-import os 
 
 from kafka import KafkaConsumer   # Import Kafka consumer
 from kafka import KafkaProducer   # Import Kafka producder
 
-sys.path.append(os.path.abspath("/home/tweetoscope/src/hawkes_estimator"))
 from src.map import compute_MAP
 from src.prediction import prediction
 
