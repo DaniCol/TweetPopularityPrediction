@@ -1,5 +1,4 @@
 import numpy as np
-import scipy.optimize as optim
 import argparse                   # To parse command line arguments
 import json                       # To parse and dump JSON
 
