@@ -1,10 +1,10 @@
-import numpy as np
 import pandas as pd
+import time
 
 from sklearn.ensemble import RandomForestRegressor
 
 class Estimator:
-    def __init__(self, key, value, batch_size = 5):
+    def __init__(self, key, value, producer_log, batch_size = 5):
         self.key = key
         self.data = pd.DataFrame(
             data={
@@ -14,6 +14,7 @@ class Estimator:
                 'W': value['W']
                 }
             )
+        self.producer_log = producer_log
         self.estimator = RandomForestRegressor()
         self.batch_size = batch_size
         self.iterator_update = 0
@@ -32,6 +33,17 @@ class Estimator:
         self.estimator.fit(
             X=self.data[['beta', 'n_star', 'G1']].to_numpy(), 
             y=self.data['W'].to_numpy())
+        
+        # Send log INFO : RF has been fitted
+        self.producer_log.send(
+            topic='logs',
+            value={
+                't': time.time(),
+                'level': 'INFO',
+                'source': 'learner',
+                'message': f'Model has been fitted -> {"{"}Time window : {self.key : >5}; Nb of points : {len(self.data) : >5}{"}"}'
+            }
+        )
     
     def handle(self, msg):
         # Add the new msg

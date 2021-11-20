@@ -1,16 +1,16 @@
-#include <chrono>
 #include <ctime>
-
 #include "../include/tweetoscopeProcessor.hpp"
 
 tweetoscope::Processor::Processor(
                         ref_producer serie_producer, 
-                        ref_producer properties_producer, 
+                        ref_producer properties_producer,
+                        ref_producer logs_producer, 
                         tweetoscope::timestamp max_duration,
                         int min_size_cascade,
                         std::vector<tweetoscope::timestamp> observation_windows)
                         : serie_producer(serie_producer),
                         properties_producer(properties_producer),
+                        logs_producer(logs_producer),
                         max_duration(max_duration),
                         min_cascade_size(min_cascade_size),
                         cascades(),
@@ -39,7 +39,13 @@ void tweetoscope::Processor::process(tweetoscope::tweet& msg){
 void tweetoscope::Processor::process_tweet(tweetoscope::tweet& tweet){
 
     std::cout <<"PROCESS TWEET " << tweet.cid << std::endl;
-
+    // Publish in logs -> Processing new tweet
+    this->logs_producer->post_msg(
+        "{\"t\": " + std::to_string(std::time(nullptr)) + ", "
+         "\"level\": \"INFO\","
+         "\"source\": \"collector\","
+         "\"message\": \"Processing new tweet -> {Cascade : " + std::to_string(tweet.cid) + "}\"}"
+    );
     ref_cascade ref = tweetoscope::make_cascade(tweet);
     refw_cascade refw = ref;
 
@@ -71,9 +77,25 @@ void tweetoscope::Processor::process_retweet(tweetoscope::tweet& retweet){
             cascades.update(cascade->location,cascade);
 
         }
+        else{
+            // Publish in logs -> Tweet id not found in symbol -> process retweet and miss tweet
+            this->logs_producer->post_msg(
+                "{\"t\": " + std::to_string(std::time(nullptr)) + ", "
+                 "\"level\": \"WARNING\","
+                 "\"source\": \"collector\","
+                 "\"message\": \"Process retweet but cascade is terminated -> {Cascade : " + std::to_string(retweet.cid) + "}\"}"
+        );
+        }
 
     }catch(std::exception& e) {
         std::cout << "Exception caught : " << e.what() << std::endl;
+        // Publish in logs -> Tweet id not found in symbol -> process retweet and miss tweet
+        this->logs_producer->post_msg(
+            "{\"t\": " + std::to_string(std::time(nullptr)) + ", "
+             "\"level\": \"ERROR\","
+             "\"source\": \"collector\","
+             "\"message\": \"Process retweet and missed tweet -> {Cascade : " + std::to_string(retweet.cid) + "}\"}"
+        );
     }
 
 }
@@ -91,6 +113,13 @@ void tweetoscope::Processor::extract_cascade(tweetoscope::timestamp current_twee
             this->publish_cascade_properties(cascade, time_window);
         }
 
+        // Publish in logs -> Cascade is terminated
+        this->logs_producer->post_msg(
+            "{\"t\": " + std::to_string(std::time(nullptr)) + ", "
+             "\"level\": \"INFO\","
+             "\"source\": \"collector\","
+             "\"message\": \"Cascade is terminated -> {Cascade : " + std::to_string(cascade->get_cid()) + "; End time : " + std::to_string(cascade->get_last_event_time()) + "}\"}"
+        );
         // Pop from the priority queue
         cascades.pop();   
     }
@@ -119,8 +148,24 @@ void tweetoscope::Processor::extract_from_partial_cascade(tweetoscope::timestamp
 
 void tweetoscope::Processor::publish_cascade_serie(tweetoscope::ref_cascade ref, tweetoscope::timestamp time_window){
     this->serie_producer->post_msg(ref->partial_cascade_to_json(time_window));
+
+    // Publish in logs -> Cascade is terminated
+    this->logs_producer->post_msg(
+        "{\"t\": " + std::to_string(std::time(nullptr)) + ", "
+         "\"level\": \"DEBUG\","
+         "\"source\": \"collector\","
+         "\"message\": \"Size sent -> {Cascade : " + std::to_string(ref->get_cid()) + "}\"}"
+    );
 }
 
 void tweetoscope::Processor::publish_cascade_properties(tweetoscope::ref_cascade ref, tweetoscope::timestamp time_window){
     this->properties_producer->post_msg(std::to_string(time_window), ref->cascade_to_json());
+
+    // Publish in logs -> Cascade serie send
+    this->logs_producer->post_msg(
+        "{\"t\": " + std::to_string(std::time(nullptr)) + ", "
+         "\"level\": \"DEBUG\","
+         "\"source\": \"collector\","
+         "\"message\": \"Cascade serie sent -> {Time window : " + std::to_string(time_window) + "; Cascade : " + std::to_string(ref->get_cid()) + "}\"}"
+    );
 }

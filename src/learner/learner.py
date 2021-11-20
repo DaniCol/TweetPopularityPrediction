@@ -4,6 +4,7 @@ import json                       # To parse and dump JSON
 import pickle
 import sys 
 import os 
+import time
 
 from kafka import KafkaConsumer   # Import Kafka consumer
 from kafka import KafkaProducer   # Import Kafka producder
@@ -27,21 +28,38 @@ def main(args):
                             key_serializer=str.encode                                 # How to serialize the key
                             )
 
+    # Log producer
+    producer_log = KafkaProducer(
+                            bootstrap_servers = args.broker_list,                     # List of brokers passed from the command line
+                            value_serializer=lambda v: json.dumps(v).encode('utf-8'), # How to serialize the value to a binary buffer
+                            )
+
     # Create the dictionary that will store every estimators
     # One for each time window
     estimators_collection = {}
 
     # Get the times series 
     for msg in consumer:                            # Blocking call waiting for a new message
-        print (f"msg: ({msg.key}, {msg.value})")    # Write key and payload of the received message
+        # print (f"msg: ({msg.key}, {msg.value})")    # Write key and payload of the received message
 
         if msg.key not in estimators_collection.keys():
-            estimators_collection[msg.key] = Estimator(key=msg.key, value=msg.value)
+            estimators_collection[msg.key] = Estimator(key=msg.key, value=msg.value, producer_log=producer_log)
 
         has_been_fit = estimators_collection[msg.key].handle(msg.value)
 
         if has_been_fit:
             producer.send('models', key = msg.key, value = estimators_collection[msg.key].estimator)
+
+            # Send log DEBUG : msg send to cascade_properties
+            producer_log.send(
+                topic='logs',
+                value={
+                    't': time.time(),
+                    'level': 'DEBUG',
+                    'source': 'learner',
+                    'message': f'Model sent -> {"{"}Time window : {msg.key : >5}{"}"}'
+                }
+            )
 
     producer.flush() # Flush: force purging intermediate buffers before leaving
 

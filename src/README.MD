@@ -66,3 +66,55 @@ If you want to delete all the files created by the make command, use the followi
 chmod +x ./script/clean.sh
 ./script/clean.sh 
 ```
+
+## Run the different microservices a terminal
+Procedure to launch all microservices in a terminal
+
+### Zookeeper instance and Kafka Broker
+You have two possibilities:
+
+- Use the script provided by the teacher
+  - `export KAFKA_PATH=/path/to/kafka`
+  - `./kafka.sh start --zooconfig zookeeper.properties --serverconfig server.properties `
+  - To stop kafka use : `./kafka.sh stop`
+- Use the command line
+  - `export KAFKA_PATH=/path/to/kafka`
+  - In a first terminal : `$KAFKA_PATH/bin/zookeeper-server-start.sh $KAFKA_PATH/config/zookeeper.properties`
+  - In a second terminal : `$KAFKA_HOME/bin/kafka-server-start.sh $KAFKA_HOME/config/server.properties`
+### Logger
+- Open a new terminal
+  - Go to logger directory : `cd <path_to_directory>/logger`
+  - Run : `python logger.py --broker-list localhost:9092 --logs_topic logs`
+
+You can also specify the level of the logger and the source. By default they are set to all.  
+- Levels : 
+  - DEBUG
+  - INFO
+  - WARNING
+  - ERROR
+  - CRITICAL
+- Sources : 
+  - "collector"
+  - "hawkes_estimator"
+  - "predictor"
+  - "learner"
+### Learner
+- Open a new terminal
+  - Go to logger directory : `cd <path_to_directory>/learner`
+  - Run : `python learner.py --broker-list localhost:9092`
+### Predictor
+- Open a new terminal
+  - Go to logger directory : `cd <path_to_directory>/predictor`
+  - Run : `python main.py --broker-list localhost:9092`
+### Hawkes Estimator
+- Open a new terminal
+  - Go to logger directory : `cd <path_to_directory>/hawkes_estimator`
+  - Run : `python heawkes_estimator.py --broker-list localhost:9092`
+### Tweet Collector
+- Open a new terminal
+  - Go to logger directory : `cd <path_to_directory>/tweet_collector`
+  - Run : `./bin/tweet-collector params.config`
+### Tweet Generator
+- Open a new terminal
+  - Go to logger directory : `cd <path_to_directory>/tweet_generator`
+  - Run : `./bin/tweet-generator params.config`

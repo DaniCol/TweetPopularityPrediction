@@ -25,6 +25,7 @@ namespace tweetoscope{
         // Class attributes
             ref_producer serie_producer;
             ref_producer properties_producer;
+            ref_producer logs_producer;
             tweetoscope::timestamp max_duration;
             int min_cascade_size;
 
@@ -42,7 +43,8 @@ namespace tweetoscope{
         public:
         // Class constructors
             Processor(  ref_producer serie_producer, 
-                        ref_producer properties_producer, 
+                        ref_producer properties_producer,
+                        ref_producer logs_producer, 
                         tweetoscope::timestamp max_duration,
                         int min_size_cascade,
                         std::vector<tweetoscope::timestamp> observation_windows);
@@ -61,13 +63,15 @@ namespace tweetoscope{
     };
 
     inline ref_processor make_processor(ref_producer serie_producer, 
-                        ref_producer properties_producer, 
+                        ref_producer properties_producer,
+                        ref_producer logs_producer, 
                         tweetoscope::timestamp max_duration,
                         int min_size_cascade,
                         std::vector<tweetoscope::timestamp> observation_windows){
         return std::make_shared<tweetoscope::Processor>(
             serie_producer,
             properties_producer,
+            logs_producer,
             max_duration,
             min_size_cascade,
             observation_windows

@@ -21,8 +21,9 @@ int main(int argc, char* argv[]) {
   
   // auto producer = std::make_shared<tweetoscope::Producer>(params, params.topic.out_series);
 
-  tweetoscope::ref_producer producer1 = tweetoscope::make_producer(params, params.topic.out_series);
-  tweetoscope::ref_producer producer2 = tweetoscope::make_producer(params, params.topic.out_properties);
+  tweetoscope::ref_producer producer_series     = tweetoscope::make_producer(params, params.topic.out_series);
+  tweetoscope::ref_producer producer_properties = tweetoscope::make_producer(params, params.topic.out_properties);
+  tweetoscope::ref_producer producer_logs       = tweetoscope::make_producer(params, params.topic.out_logs);
 
   std::cout << std::endl
         << "Parameters : " << std::endl
@@ -50,8 +51,9 @@ int main(int argc, char* argv[]) {
 
       if(processors.find(key) == processors.end()){
         processors[key] = tweetoscope::make_processor(
-          producer1,
-          producer2,
+          producer_series,
+          producer_properties,
+          producer_logs,
           max_duration,
           params.cascade.min_cascade_size,
           observation_windows);

@@ -51,10 +51,22 @@ tweetoscope::cascade::idf tweetoscope::Cascade::get_cid() const{
 
 
 std::string tweetoscope::Cascade::cascade_to_json() const{
+    
+    std::string time_windows = "[";
+    for(auto& t: this->windows){
+        time_windows += std::to_string(t) + ",";
+    }
+    // Remove the last ","
+    if(!(this->windows.empty())) time_windows.pop_back();
+
+    // Close the array
+    time_windows += "]";
+
     return "{\"type\": \"size\", " 
             "\"cid\": " + std::to_string(this->cid) + ", " 
             "\"n_tot\": " + std::to_string(this->n_tots) + ", "
-            "\"t_end\": " + std::to_string(this->last_event_time) + "}";
+            "\"t_end\": " + std::to_string(this->last_event_time) + ", "
+            "\"time_windows\": " + time_windows + "}";
 }
 
 
@@ -67,7 +79,7 @@ std::string tweetoscope::Cascade::partial_cascade_to_json(tweetoscope::timestamp
         tweets += "[" + std::to_string(t.first) + "," + std::to_string(t.second) + "],";
     }
     // Remove the last ","
-    tweets.pop_back();
+    if(!(this->tweets.empty())) tweets.pop_back();
 
     // Close the array
     tweets += "]";
