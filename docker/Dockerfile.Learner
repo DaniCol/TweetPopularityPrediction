@@ -1,0 +1,12 @@
+FROM python:latest
+
+RUN pip install numpy \
+            scipy \
+            argparse \
+            pandas \
+            sklearn\
+            kafka-python
+
+COPY ./src/learner/ /Learner 
+WORKDIR /Learner
+CMD export RDK_PREFIX=/usr/local && export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$RDK_PREFIX/lib && export KAFKA_PATH=/kafka-2.4.1-src && python3 learner.py --broker-list localhost:9092
