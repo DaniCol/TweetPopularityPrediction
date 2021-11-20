@@ -1,0 +1,14 @@
+FROM python:latest
+
+# Install python packages 
+RUN pip install numpy \
+            scipy \
+            argparse \
+            sklearn\
+            kafka-python
+
+# Copy the app folder inside the docker workspace
+COPY ./src/predictor/ /Predictor 
+COPY ./src/tweet_generator/params.config /Predictor/params.config 
+WORKDIR /Predictor
+CMD export RDK_PREFIX=/usr/local && export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$RDK_PREFIX/lib && export KAFKA_PATH=/kafka-2.4.1-src && python main.py --params-file ./params.config
