@@ -23,6 +23,7 @@ int main(int argc, char* argv[]) {
 
   tweetoscope::ref_producer producer1 = tweetoscope::make_producer(params, params.topic.out_series);
   tweetoscope::ref_producer producer2 = tweetoscope::make_producer(params, params.topic.out_properties);
+  tweetoscope::ref_producer producer3 = tweetoscope::make_producer(params, params.topic.out_logs);
 
   std::cout << std::endl
         << "Parameters : " << std::endl
@@ -52,6 +53,7 @@ int main(int argc, char* argv[]) {
         processors[key] = tweetoscope::make_processor(
           producer1,
           producer2,
+          producer3,
           max_duration,
           params.cascade.min_cascade_size,
           observation_windows);

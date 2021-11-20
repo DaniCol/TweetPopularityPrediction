@@ -67,7 +67,7 @@ std::string tweetoscope::Cascade::partial_cascade_to_json(tweetoscope::timestamp
         tweets += "[" + std::to_string(t.first) + "," + std::to_string(t.second) + "],";
     }
     // Remove the last ","
-    tweets.pop_back();
+    if(!(this->tweets.empty())) tweets.pop_back();
 
     // Close the array
     tweets += "]";

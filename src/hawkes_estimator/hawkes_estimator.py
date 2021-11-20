@@ -1,6 +1,7 @@
 import numpy as np
 import argparse                   # To parse command line arguments
 import json                       # To parse and dump JSON
+import time
 
 from kafka import KafkaConsumer   # Import Kafka consumer
 from kafka import KafkaProducer   # Import Kafka producder
@@ -23,9 +24,15 @@ def main(args):
                             key_serializer=str.encode                                 # How to serialize the key
                             )
 
+    # Log producer
+    producer_log = KafkaProducer(
+                            bootstrap_servers = args.broker_list,                     # List of brokers passed from the command line
+                            value_serializer=lambda v: json.dumps(v).encode('utf-8'), # How to serialize the value to a binary buffer
+                            )
+
     # Get the times series 
     for msg in consumer:                            # Blocking call waiting for a new message
-        print (f"msg: ({msg.key}, {msg.value})")    # Write key and payload of the received message
+        # print (f"msg: ({msg.key}, {msg.value})")    # Write key and payload of the received message
 
         # Get the data (here the key of the message is None so we don't care about it)
         _ , v = msg.key, msg.value
@@ -44,7 +51,7 @@ def main(args):
         f, params = compute_MAP(history, t, alpha, mu)
 
         # Predict the number of retweet with the estimated parameters
-        _, G1, n_star = prediction(params, history, alpha, mu, t)
+        N_tot, G1, n_star = prediction(params, history, alpha, mu, t)
 
         # Build the message to send to the Kafka Topic
         value = {
@@ -52,11 +59,23 @@ def main(args):
             'cid': v['cid'],
             'msg' : v['msg'],
             'n_obs': history.shape[0],
+            'n_supp': N_tot,
             'params': [params[1], n_star, G1]
         }
 
         # Send the message to the 'cascade_properties' topic 
         producer.send('cascade_properties', key = str(t), value = value)
+        
+        # Send log DEBUG : msg send to cascade_properties
+        producer_log.send(
+            topic='logs',
+            value={
+                't': time.time(),
+                'level': 'DEBUG',
+                'source': 'hawkes_estimator',
+                'message': f'Parameters sent -> {"{"}Time window : {t : >5}; Cascade : {v["cid"] : >4}{"}"}'
+            }
+        )
 
     producer.flush() # Flush: force purging intermediate buffers before leaving
 

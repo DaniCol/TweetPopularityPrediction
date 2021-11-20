@@ -1,17 +1,13 @@
-import numpy as np
 import argparse                   # To parse command line arguments
 import configparser
 import json                       # To parse and dump JSON
 import pickle
 
-import sys 
 import os 
 
 from collections import OrderedDict
 from kafka import KafkaConsumer   # Import Kafka consumer
 from kafka import KafkaProducer   # Import Kafka producder
-
-sys.path.append(os.path.abspath("/home/tweetoscope/src/predictor"))
 
 from src.predictor import Predictor
 
@@ -62,14 +58,20 @@ def main(args):
                             value_serializer=lambda v: json.dumps(v).encode('utf-8'), # How to serialize the value to a binary buffer
                             key_serializer=str.encode                                 # How to serialize the key
                             )
+    
+    # Log producer
+    producer_log = KafkaProducer(
+                            bootstrap_servers = config.get('kafka', 'brokers'),       # List of brokers passed from the command line
+                            value_serializer=lambda v: json.dumps(v).encode('utf-8'), # How to serialize the value to a binary buffer
+                            )
 
     # Create the dictionary that will store every estimators
     # One for each time window
-    predictor = Predictor(producer=producer, time_windows=time_windows)
+    predictor = Predictor(producer=producer, time_windows=time_windows, producer_log=producer_log)
 
     # Get the times series 
     for msg in consumer:                            # Blocking call waiting for a new message
-        print (f"msg: ({msg.key}, {msg.value})")    # Write key and payload of the received message
+        # print (f"msg: ({msg.key}, {msg.value})")    # Write key and payload of the received message
         
         # Manage Learner messages
         if msg.topic == 'models':

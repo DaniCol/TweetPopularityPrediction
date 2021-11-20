@@ -1,11 +1,13 @@
 import numpy as np
+import time
 
 
 class Cascade:
     
-    def __init__(self, cid, time_windows) -> None:
+    def __init__(self, cid, time_windows, producer_log) -> None:
         self.cid = cid
         self.time_windows_list = time_windows
+        self.producer_log = producer_log
 
         self.tweet_msg = ''
 
@@ -25,7 +27,16 @@ class Cascade:
         n_obs = self.windows[time_window]['parameters']['n_obs']
         n_tot = self.windows[time_window]['size']['n_tot']
         if G1==0:
-            print("WARNING G1 equals to 0 -> set to 1")
+            # Send log WARNING : G must not be equal to 0
+            self.producer_log.send(
+                topic='logs', 
+                value={
+                    't': time.time(),
+                    'level': 'WARNING',
+                    'source': 'predictor',
+                    'message': f'G1 equals to 0. Set to 1 -> {"{"}Time window : {time_window : >5}; Cascade : {self.cid : >4}{"}"}'
+                }
+            )
             G1 = 1
         return (n_tot - n_obs) * (1 - n_star) / G1
 
@@ -48,17 +59,24 @@ class Cascade:
             'cid': self.cid,
             'msg': self.tweet_msg,
             'T_obs': time_window,
-            'n_tot': self.windows[time_window]['parameters']['n_supp']
+            'n_supp_rf': self.windows[time_window]['parameters']['n_supp_rf'],
+            'n_supp': self.windows[time_window]['parameters']['n_supp']
         }
         return msg
     
     def generate_stat_msg(self, time_window):
+        # Compute ARE when predicting with RF
+        are_rf = abs(self.windows[time_window]['parameters']['n_supp_rf']-self.windows[time_window]['size']['n_tot']) / \
+            self.windows[time_window]['size']['n_tot']
+        # Compute ARE only using hawkes estimator
         are = abs(self.windows[time_window]['parameters']['n_supp']-self.windows[time_window]['size']['n_tot']) / \
             self.windows[time_window]['size']['n_tot']
+
         msg = {
             'type': 'stat',
             'cid': self.cid,
             'T_obs': time_window,
+            'ARE_RF': are_rf,
             'ARE': are
         }
         return msg
@@ -69,12 +87,12 @@ class Cascade:
                 self.windows[time_window]['parameters']['params']['n_star'],
                 self.windows[time_window]['parameters']['params']['G1']
             ]
-        n_supp = self.windows[time_window]['parameters']['n_obs'] +                 \
+        n_supp_rf = self.windows[time_window]['parameters']['n_obs'] +                 \
                  model.predict(X=np.array(X).reshape(1, -1))[0] *                   \
                  self.windows[time_window]['parameters']['params']['G1'] /          \
                  (1 - self.windows[time_window]['parameters']['params']['n_star'])
         
-        self.windows[time_window]['parameters']['n_supp'] = n_supp
+        self.windows[time_window]['parameters']['n_supp_rf'] = n_supp_rf
 
     def handle_parameters_type_msg(self, time_window, msg):
         # Add new time window if doesn't exist
@@ -82,6 +100,7 @@ class Cascade:
 
         self.windows[time_window]['parameters'] = {
             'n_obs': msg['n_obs'],
+            'n_supp': msg['n_supp'],
             'params': {
                 'beta': msg['params'][0],
                 'n_star': msg['params'][1],
