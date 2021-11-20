@@ -73,7 +73,6 @@ class Predictor:
                 )
 
         if self.cascades[value['cid']].time_windows_list and self.cascades[value['cid']].clean_memory():
-            print(self.cascades[value['cid']].time_windows_list)
             # Publish msg_s on sample and stat topics
             self.cascades[value['cid']].publish_sample_and_stat(producer=self.producer)
 
