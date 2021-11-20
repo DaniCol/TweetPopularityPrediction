@@ -9,11 +9,9 @@ class BasicEstimator:
 
 class Predictor:
     
-    def __init__(self, producer, time_windows, producer_log) -> None:
+    def __init__(self, producer, producer_log) -> None:
         # Kafka Producer
         self.producer = producer
-        # Time when partial cascade are published
-        self.time_windows = time_windows
         # Kafka Log Producer
         self.producer_log = producer_log
         # All the trained RF
@@ -39,7 +37,7 @@ class Predictor:
     def handle_properties_msg(self, time_window, value):
         # Create the cascade object 
         if value['cid'] not in self.cascades.keys():
-            self.cascades[value['cid']] = Cascade(cid=value['cid'], time_windows=self.time_windows, producer_log=self.producer_log)
+            self.cascades[value['cid']] = Cascade(cid=value['cid'], producer_log=self.producer_log)
         
         # Manage Hawkes Estimator messages
         if value['type'] == 'parameters':
@@ -74,7 +72,8 @@ class Predictor:
                 msg=value
                 )
 
-        if self.cascades[value['cid']].clean_memory():
+        if self.cascades[value['cid']].time_windows_list and self.cascades[value['cid']].clean_memory():
+            print(self.cascades[value['cid']].time_windows_list)
             # Publish msg_s on sample and stat topics
             self.cascades[value['cid']].publish_sample_and_stat(producer=self.producer)
 
@@ -85,7 +84,7 @@ class Predictor:
                     't': time.time(),
                     'level': 'DEBUG',
                     'source': 'predictor',
-                    'message': f'Sample sent -> {"{"}Time window : {self.time_windows}; Cascade : {value["cid"] : >4}{"}"}'
+                    'message': f'Sample sent -> {"{"}Time window : {self.cascades[value["cid"]].time_windows_list}; Cascade : {value["cid"] : >4}{"}"}'
                 }
             )
 
@@ -96,7 +95,7 @@ class Predictor:
                     't': time.time(),
                     'level': 'DEBUG',
                     'source': 'predictor',
-                    'message': f'Stat sent -> {"{"}Time window : {self.time_windows}; Cascade : {value["cid"] : >4}{"}"}'
+                    'message': f'Stat sent -> {"{"}Time window : {self.cascades[value["cid"]].time_windows_list}; Cascade : {value["cid"] : >4}{"}"}'
                 }
             )
 

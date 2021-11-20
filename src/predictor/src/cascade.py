@@ -4,9 +4,9 @@ import time
 
 class Cascade:
     
-    def __init__(self, cid, time_windows, producer_log) -> None:
+    def __init__(self, cid, producer_log) -> None:
         self.cid = cid
-        self.time_windows_list = time_windows
+        self.time_windows_list = []
         self.producer_log = producer_log
 
         self.tweet_msg = ''
@@ -117,6 +117,8 @@ class Cascade:
             'n_tot': msg['n_tot'],
             't_end': msg['t_end']
         }
+        if not self.time_windows_list:
+            self.time_windows_list = msg['time_windows']
 
     def publish_sample_and_stat(self, producer):
         for time_window in self.windows.keys():
@@ -137,7 +139,7 @@ class Cascade:
         # Check if the cascade is over
         is_finished = True
         for time_window in self.time_windows_list:
-            if not (bool(self.windows.get(time_window, {}).get('size', False)) and bool(self.windows.get(time_window, {}).get('parameters', False))):
+            if not (bool(self.windows.get(str(time_window), {}).get('size', False)) and bool(self.windows.get(str(time_window), {}).get('parameters', False))):
                 is_finished = False
                 break
         return is_finished
