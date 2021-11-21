@@ -9,6 +9,5 @@ RUN pip install numpy \
 
 # Copy the app folder inside the docker workspace
 COPY ./src/predictor/ /Predictor 
-COPY ./src/tweet_generator/params.config /Predictor/params.config 
 WORKDIR /Predictor
-CMD export RDK_PREFIX=/usr/local && export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$RDK_PREFIX/lib && export KAFKA_PATH=/kafka-2.4.1-src && python main.py --params-file ./params.config
+CMD export RDK_PREFIX=/usr/local && export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$RDK_PREFIX/lib && export KAFKA_PATH=/kafka-2.4.1-src && python main.py --broker-list localhost:9092

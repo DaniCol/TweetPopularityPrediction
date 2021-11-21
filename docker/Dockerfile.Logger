@@ -3,8 +3,16 @@ FROM python:latest
 RUN pip install argparse \
             kafka-python
 
-COPY ./src/kafka_logger/ /KafkaLogger 
-WORKDIR /KafkaLogger
+RUN pip install termcolor 
+
+
+COPY ./src/logger/ /Logger 
+WORKDIR /Logger
 ARG topic
 ENV topic $topic
-CMD export RDK_PREFIX=/usr/local && export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$RDK_PREFIX/lib && export KAFKA_PATH=/kafka-2.4.1-src && python3 debug_kafka.py --broker-list localhost:9092 --logs_topic topic
+ARG src
+ENV src $src
+ARG lvl
+ENV lvl $lvl
+CMD export RDK_PREFIX=/usr/local && export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$RDK_PREFIX/lib && export KAFKA_PATH=/kafka-2.4.1-src &&\
+python3 logger.py --broker-list localhost:9092 --logs_topic $topic --levels $lvl --sources $src
