@@ -6,8 +6,6 @@ services:
       context: ..
       dockerfile: ./docker/Dockerfile.Logger
       network : host
-    depends_on : 
-      - kafka-service
   learner:
     build: 
       context: ..
