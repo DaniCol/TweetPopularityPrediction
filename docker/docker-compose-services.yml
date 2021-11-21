@@ -1,0 +1,45 @@
+version: '3.4'
+
+services:
+  logger:
+    build: 
+      context: ..
+      dockerfile: ./docker/Dockerfile.Logger
+      network : host
+    depends_on : 
+      - kafka-service
+  learner:
+    build: 
+      context: ..
+      dockerfile: ./docker/Dockerfile.Learner
+      network : host
+    depends_on : 
+      - logger
+  predictor:
+    build: 
+      context: ..
+      dockerfile: ./docker/Dockerfile.Predictor
+      network : host
+    depends_on: 
+      - learner
+  hawkes_estimator:
+    build: 
+      context: ..
+      dockerfile: ./docker/Dockerfile.Hawkes
+      network : host
+    depends_on:
+      - predictor
+  tweet_collector:
+    build: 
+      context: ..
+      dockerfile: ./docker/Dockerfile.TweetCollector
+      network : host
+    depends_on : 
+      - hawkes_estimator
+  tweet_generator:
+    build: 
+      context: ..
+      dockerfile: ./docker/Dockerfile.TweetGenerator
+      network : host
+    depends_on : 
+      - tweet_collector
