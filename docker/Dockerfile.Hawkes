@@ -1,10 +1,11 @@
-FROM python:latest
+FROM python:3.9-slim
 
 RUN pip install numpy \
             scipy \
             argparse \
             kafka-python
 
+
 COPY ./src/hawkes_estimator/ /HawkesEstimator 
 WORKDIR /HawkesEstimator
-CMD export RDK_PREFIX=/usr/local && export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$RDK_PREFIX/lib && export KAFKA_PATH=/kafka-2.4.1-src && python3 hawkes_estimator.py --broker-list localhost:9092
+CMD python3 hawkes_estimator.py --broker-list kafka-service:9092

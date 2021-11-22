@@ -1,38 +1,17 @@
-FROM gcc:latest
+FROM alpine
 
-# Install cmake
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    cmake \
-  && apt-get clean \
-  && rm -rf /var/lib/apt/lists/*
-
-# Install general dependancies
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    zlib1g-dev libbz2-dev libsnappy-dev \
-  && apt-get clean \
-  && rm -rf /var/lib/apt/lists/*
-
-# Install Boost 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    libboost-all-dev \
-  && apt-get clean \
-  && rm -rf /var/lib/apt/lists/*
+RUN apk add --update --no-cache cmake bzip2-dev zlib-dev boost-dev libtool libressl-dev librdkafka-dev git build-base
 
 
-# Install Cpp Kafka
-RUN apt-get update && apt install -y git &&\ 
-    apt-get install -y libtool && \
-    apt install -y libssl-dev && \
-    apt install -y librdkafka-dev && \
-    git clone https://github.com/mfontanini/cppkafka.git && \
+RUN git clone https://github.com/mfontanini/cppkafka.git && \
     cd /cppkafka && \
     mkdir build && \
     cd build && \
     cmake .. && \
     make && \
     make install 
+            
 
-# Install Gaml 
 RUN git clone https://github.com/HerveFrezza-Buet/gaml &&\
     cd gaml &&\
     mkdir -p gaml/build &&\
@@ -48,4 +27,4 @@ WORKDIR /Tweetgenerator
 # Build the TweetGenerator App
 RUN chmod +x ./script/build.sh ; ./script/build.sh
 # Run the tweetgenerator
-CMD export RDK_PREFIX=/usr/local && export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$RDK_PREFIX/lib && export KAFKA_PATH=/kafka-2.4.1-src && ./bin/tweet-generator ./params.config
+CMD export RDK_PREFIX=/usr/local && export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$RDK_PREFIX/lib && ./bin/tweet-generator ./params_deployment.config
