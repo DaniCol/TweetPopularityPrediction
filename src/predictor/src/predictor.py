@@ -16,8 +16,8 @@ class Predictor:
         self.producer_log = producer_log
         # All the trained RF
         self.predictors_collection = {}
-        # Cascades 
-        self.cascades = {}      
+        # Time windows
+        self.time_windows = {}  
 
 
     def handle_model_msg(self, time_window, value):
@@ -35,23 +35,25 @@ class Predictor:
         )
 
     def handle_properties_msg(self, time_window, value):
-        # Create the cascade object 
-        if value['cid'] not in self.cascades.keys():
-            self.cascades[value['cid']] = Cascade(cid=value['cid'], producer_log=self.producer_log)
+        # Create the cascade object in specific time window
+        try:
+            if value['cid'] not in self.time_windows[time_window]:
+                self.time_windows[time_window][value['cid']] = Cascade(cid=value['cid'], producer_log=self.producer_log)
+        except KeyError:
+            self.time_windows[time_window] = {value['cid']: Cascade(cid=value['cid'], producer_log=self.producer_log)}
         
         # Manage Hawkes Estimator messages
         if value['type'] == 'parameters':
-            self.cascades[value['cid']].handle_parameters_type_msg(
+            self.time_windows[time_window][value['cid']].handle_parameters_type_msg(
                 time_window=time_window,
                 msg=value
             )
             # Predict tweet popularity
-            self.cascades[value['cid']].predict(
-                time_window=time_window,
+            self.time_windows[time_window][value['cid']].predict(
                 model=self.predictors_collection.get(time_window, BasicEstimator())
             )
             # Publish msg on alert topic
-            self.cascades[value['cid']].publish_alert(producer=self.producer, time_window=time_window)
+            self.time_windows[time_window][value['cid']].publish_alert(producer=self.producer, time_window=time_window)
             
             # Send log DEBUG : msg send to alert
             self.producer_log.send(
@@ -67,14 +69,13 @@ class Predictor:
 
         # Manage Tweet Collector messages  
         elif value['type'] == 'size':
-            self.cascades[value['cid']].handle_size_type_msg(
-                time_window=time_window,
+            self.time_windows[time_window][value['cid']].handle_size_type_msg(
                 msg=value
                 )
 
-        if self.cascades[value['cid']].time_windows_list and self.cascades[value['cid']].clean_memory():
+        if self.time_windows[time_window][value['cid']].clean_memory():
             # Publish msg_s on sample and stat topics
-            self.cascades[value['cid']].publish_sample_and_stat(producer=self.producer)
+            self.time_windows[time_window][value['cid']].publish_sample_and_stat(producer=self.producer)
 
             # Send log DEBUG : msg send to sample
             self.producer_log.send(
@@ -83,7 +84,7 @@ class Predictor:
                     't': time.time(),
                     'level': 'DEBUG',
                     'source': 'predictor',
-                    'message': f'Sample sent -> {"{"}Time window : {self.cascades[value["cid"]].time_windows_list}; Cascade : {value["cid"] : >4}{"}"}'
+                    'message': f'Sample sent -> {"{"}Time window : {self.time_windows[time_window][value["cid"]].time_window}; Cascade : {value["cid"] : >4}{"}"}'
                 }
             )
 
@@ -94,9 +95,9 @@ class Predictor:
                     't': time.time(),
                     'level': 'DEBUG',
                     'source': 'predictor',
-                    'message': f'Stat sent -> {"{"}Time window : {self.cascades[value["cid"]].time_windows_list}; Cascade : {value["cid"] : >4}{"}"}'
+                    'message': f'Stat sent -> {"{"}Time window : {self.time_windows[time_window][value["cid"]].time_window}; Cascade : {value["cid"] : >4}{"}"}'
                 }
             )
 
             # Free memory by deleting the cascade
-            del self.cascades[value['cid']]
+            del self.time_windows[time_window][value["cid"]]

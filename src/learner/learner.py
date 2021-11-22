@@ -17,6 +17,7 @@ def main(args):
     # Listen to the cascade_series topic 
     consumer = KafkaConsumer('samples',                                                  # Topic name
                             bootstrap_servers = args.broker_list,                        # List of brokers passed from the command line
+                            group_id='learner',
                             value_deserializer=lambda v: json.loads(v.decode('utf-8')),  # How to deserialize the value from a binary buffer
                             key_deserializer= lambda v: v.decode()                       # How to deserialize the key (if any)
                             )
