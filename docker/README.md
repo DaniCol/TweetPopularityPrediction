@@ -1,47 +1,30 @@
-## Run the pipeline without docker compose
+## Run the pipeline with docker compose 
+### Launch Zookeeper and Kafka Broker
+- Open a new terminal
+  - Go to logger directory : `cd <path_to_directory>/docker`
+  - Run : `docker-compose -f docker-compose-middleware.yml -p middleware up`
 
-To build each docker image : 
+### Launch all micro services
+- Open a new terminal
+  - Go to logger directory : `cd <path_to_directory>/docker`
+  - Run : `docker-compose -f docker-compose-services.yml up`
 
-```
-docker build -t hawkes -f Dockerfile.Hawkes ..
-docker build -t learner -f Dockerfile.Learner ..
-docker build -t broker -f Dockerfile.KafkaBroker ..
-docker build -t logger -f Dockerfile.Logger ..
-docker build -t predictor -f Dockerfile.Predictor ..
-docker build -t topics -f Dockerfile.Topics ..
-docker build -t tweetcollector -f Dockerfile.TweetCollector ..
-docker build -t tweetgenerator -f Dockerfile.TweetGenerator ..
-```
+## Stop the pipeline with docker compose 
 
-To run each docker image :
 
-```
-launch_zookeeper.sh
-docker run --rm -it --network host hawkes
-docker run --rm -it --network host learner
-docker run --rm -it -e lvl='DEBUG' -e src='collector' -e topic='cascade_series' --network host logger 
-```
+### Stop all micro services
+- Open a new terminal
+  - Go to logger directory : `cd <path_to_directory>/docker`
+  - Run : `docker-compose -f docker-compose-services.yml down`
 
-EtC. etc. 
+### Stop Zookeeper and Kafka Broker
+- Open a new terminal
+  - Go to logger directory : `cd <path_to_directory>/docker`
+  - Run : `docker-compose -f docker-compose-middleware.yml -p middleware down`
 
-## Run te pipeline with docker compose 
-
-```
-docker-compose -f docker-compose-middleware.yml up
-docker-compose -f docker-compose-services.yml up
-```
-Bien penser à lancer middleware en premier et services en 2eme. 
-Avant de relancer middleware, clean docker containers.  
-
-## CLEAN DOCKER CONTAINERS IN THE BACKGROUND 
+## Clean Docker container in the background
 
 ```
 docker stop $(docker ps -a -q)
 docker rm $(docker ps -a -q)
 ```
-
-## Commentaires 
-
-L'image topics creations est sûrement inutile.
-L'image Logger sert juste à débugger, pas besoin de la lancer pr tester la pipeline. 
-Pb au niveau de l'image HawkesProcessor. Error sur le script python dans le consumer. 
