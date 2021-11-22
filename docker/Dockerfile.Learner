@@ -1,0 +1,11 @@
+FROM python:3.9-slim
+
+RUN pip install numpy \
+            argparse \
+            kafka-python \
+            scikit-learn \
+            pandas 
+
+COPY ./src/learner/ /Learner 
+WORKDIR /Learner
+CMD python3 learner.py --broker-list kafka-service:9092

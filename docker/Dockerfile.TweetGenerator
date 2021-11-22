@@ -1,0 +1,30 @@
+FROM alpine
+
+RUN apk add --update --no-cache cmake bzip2-dev zlib-dev boost-dev libtool libressl-dev librdkafka-dev git build-base
+
+
+RUN git clone https://github.com/mfontanini/cppkafka.git && \
+    cd /cppkafka && \
+    mkdir build && \
+    cd build && \
+    cmake .. && \
+    make && \
+    make install 
+            
+
+RUN git clone https://github.com/HerveFrezza-Buet/gaml &&\
+    cd gaml &&\
+    mkdir -p gaml/build &&\
+    cd gaml/build &&\
+    cmake .. -DCMAKE_INSTALL_PREFIX=/usr &&\
+    make -j &&\
+    make install &&\
+    cd ../..
+
+# Copy the TweetGenerator App in the docker workspace
+COPY ./src/tweet_generator/ /Tweetgenerator 
+WORKDIR /Tweetgenerator
+# Build the TweetGenerator App
+RUN chmod +x ./script/build.sh ; ./script/build.sh
+# Run the tweetgenerator
+CMD export RDK_PREFIX=/usr/local && export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$RDK_PREFIX/lib && ./bin/tweet-generator ./params_deployment.config

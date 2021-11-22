@@ -45,3 +45,6 @@
 
 # Binaries
 bin/
+
+# idx files
+*.idx

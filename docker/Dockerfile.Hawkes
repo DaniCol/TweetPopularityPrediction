@@ -1,0 +1,11 @@
+FROM python:3.9-slim
+
+RUN pip install numpy \
+            scipy \
+            argparse \
+            kafka-python
+
+
+COPY ./src/hawkes_estimator/ /HawkesEstimator 
+WORKDIR /HawkesEstimator
+CMD python3 hawkes_estimator.py --broker-list kafka-service:9092

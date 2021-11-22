@@ -1,0 +1,26 @@
+version: '3.4'
+
+services:
+  zookeeper:
+    image: zookeeper
+    networks:
+      - tweetoscope-net
+    ports:
+      - "2181:2181"
+  kafka-service:
+    image: wurstmeister/kafka
+    networks:
+      - tweetoscope-net
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
+      KAFKA_ADVERTISED_HOST_NAME: "kafka-service"
+      KAFKA_ADVERTISED_LISTENERS: "PLAINTEXT://kafka-service:9092"
+
+networks:
+  tweetoscope-net:
+    driver: bridge

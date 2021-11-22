@@ -1,0 +1,12 @@
+FROM python:3.9-slim
+
+RUN pip install numpy \
+            argparse \
+            kafka-python \
+            scikit-learn
+
+# Copy the app folder inside the docker workspace
+COPY ./src/predictor/ /Predictor 
+WORKDIR /Predictor
+CMD python3 main.py --broker-list kafka-service:9092
+

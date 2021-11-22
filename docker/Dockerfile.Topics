@@ -1,0 +1,4 @@
+FROM wurstmeister/kafka
+COPY topicsCreation.sh .
+RUN chmod +x topicsCreation.sh
+CMD ./topicsCreation.sh
