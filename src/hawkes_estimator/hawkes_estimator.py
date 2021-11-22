@@ -13,6 +13,7 @@ from src.prediction import prediction
 def main(args):
     # Listen to the cascade_series topic 
     consumer = KafkaConsumer('cascade_series',                                           # Topic name
+                            group_id='hawkes',
                             bootstrap_servers = args.broker_list,                        # List of brokers passed from the command line
                             value_deserializer=lambda v: json.loads(v.decode('utf-8')),  # How to deserialize the value from a binary buffer
                             )
