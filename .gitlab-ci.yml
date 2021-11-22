@@ -1,0 +1,89 @@
+stages:
+    - create_docker_images
+
+services:
+  - docker:dind
+
+create_logger_docker_image_job:
+    stage: create_docker_images
+    image: docker:latest
+    script:
+        - docker build -t $CI_REGISTRY_IMAGE/logger -f ./docker/Dockerfile.Logger .
+        - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+        - docker push $CI_REGISTRY_IMAGE/logger
+    only:
+        changes:
+            - src/logger/logger.py
+            
+create_learner_docker_image_job:
+    stage: create_docker_images
+    image: docker:latest
+    script:
+        - docker build -t $CI_REGISTRY_IMAGE/learner -f ./docker/Dockerfile.Learner .
+        - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+        - docker push $CI_REGISTRY_IMAGE/learner
+    only:
+        changes:
+            - src/learner/learner.py
+            - src/learner/estimator.py
+                
+create_predictor_docker_image_job:
+    stage: create_docker_images
+    image: docker:latest
+    script:
+        - docker build -t $CI_REGISTRY_IMAGE/predictor -f ./docker/Dockerfile.Predictor .
+        - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+        - docker push $CI_REGISTRY_IMAGE/predictor
+    only:
+        changes:
+            - src/predictor/main.py
+            - src/predictor/src/cascade.py
+            - src/predictor/src/predictor.py
+
+create_hawkes_docker_image_job:
+    stage: create_docker_images
+    image: docker:latest
+    script:
+        - docker build -t $CI_REGISTRY_IMAGE/hawkes -f ./docker/Dockerfile.Hawkes .
+        - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+        - docker push $CI_REGISTRY_IMAGE/hawkes
+    only:
+        changes:
+            - src/hawkes_estimator/hawkes_estimator.py
+            - src/hawkes_estimator/src/map.py
+            - src/hawkes_estimator/src/mle.py
+            - src/hawkes_estimator/src/predictor.py
+            - src/hawkes_estimator/src/utils.py
+
+create_tweetcollector_docker_image_job:
+    stage: create_docker_images
+    image: docker:latest
+    script:
+        - docker build -t $CI_REGISTRY_IMAGE/tweetcollector -f ./docker/Dockerfile.TweetCollector .
+        - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+        - docker push $CI_REGISTRY_IMAGE/tweetcollector
+    only:
+        changes:
+            - src/tweet_collector/app/tweetoscopeCollector.cpp
+            - src/tweet_collector/include/tweetoscopeCascade.hpp
+            - src/tweet_collector/include/tweetoscopeCollectorParams.hpp
+            - src/tweet_collector/include/tweetoscopeConsumer.hpp
+            - src/tweet_collector/include/tweetoscopeProcessor.hpp
+            - src/tweet_collector/include/tweetoscopeProducer.hpp
+            - src/tweet_collector/include/tweetoscopeTweetReader.hpp
+            - src/tweet_collector/src/tweetoscopeCascade.hpp
+            - src/tweet_collector/src/tweetoscopeConsumer.hpp
+            - src/tweet_collector/src/tweetoscopeProcessor.hpp
+            - src/tweet_collector/src/tweetoscopeProducer.hpp
+
+create_tweetgenerator_docker_image_job:
+    stage: create_docker_images
+    image: docker:latest
+    script:
+        - docker build -t $CI_REGISTRY_IMAGE/tweetgenerator -f ./docker/Dockerfile.TweetGenerator .
+        - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+        - docker push $CI_REGISTRY_IMAGE/tweetgenerator
+    only:
+        changes:
+            - src/tweet_generator/src/tweet-generator.cpp
+            - src/tweet_generator/src/tweetoscopeGenerator.hpp
