@@ -5,39 +5,54 @@ services:
     build: 
       context: ..
       dockerfile: ./docker/Dockerfile.Logger
-      network : host
+    tty: true
+    networks:
+      - middleware_tweetoscope-net
+    environment:
+      lvl: "DEBUG INFO WARNING ERROR CRITICAL"
+      src: "collector hawkes_estimator learner predictor"
+
   learner:
     build: 
       context: ..
       dockerfile: ./docker/Dockerfile.Learner
-      network : host
+    networks:
+      - middleware_tweetoscope-net
     depends_on : 
       - logger
   predictor:
     build: 
       context: ..
       dockerfile: ./docker/Dockerfile.Predictor
-      network : host
+    networks:
+      - middleware_tweetoscope-net
     depends_on: 
       - learner
   hawkes_estimator:
     build: 
       context: ..
       dockerfile: ./docker/Dockerfile.Hawkes
-      network : host
+    networks:
+      - middleware_tweetoscope-net
     depends_on:
       - predictor
   tweet_collector:
     build: 
       context: ..
       dockerfile: ./docker/Dockerfile.TweetCollector
-      network : host
+    networks:
+      - middleware_tweetoscope-net
     depends_on : 
       - hawkes_estimator
   tweet_generator:
     build: 
       context: ..
       dockerfile: ./docker/Dockerfile.TweetGenerator
-      network : host
+    networks:
+      - middleware_tweetoscope-net
     depends_on : 
       - tweet_collector
+
+networks:
+  middleware_tweetoscope-net:
+    external: true
