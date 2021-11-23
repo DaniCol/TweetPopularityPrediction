@@ -1,0 +1,163 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    service: logger
+  name: logger
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: logger
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        service: logger
+    spec:
+      imagePullSecrets:
+      - name: tweetoscope-key
+      containers:
+        - image: gitlab-student.centralesupelec.fr:4567/2018colombod/tweetoscope_2021_06/logger:latest
+          name: logger
+          env:
+            - name: lvl
+              value: DEBUG INFO WARNING ERROR CRITICAL
+            - name: src
+              value: collector hawkes_estimator learner predictor
+          resources: {}
+          tty: true
+      restartPolicy: Always
+status: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    service: learner
+  name: learner
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: learner
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        service: learner
+    spec:
+      imagePullSecrets:
+      - name: tweetoscope-key
+      containers:
+        - image: gitlab-student.centralesupelec.fr:4567/2018colombod/tweetoscope_2021_06/learner:latest
+          name: learner
+          resources: {}
+      restartPolicy: Always
+status: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    service: predictor
+  name: predictor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: predictor
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        service: predictor
+    spec:
+      imagePullSecrets:
+      - name: tweetoscope-key
+      containers:
+        - image: gitlab-student.centralesupelec.fr:4567/2018colombod/tweetoscope_2021_06/predictor:latest
+          name: predictor
+          resources: {}
+      restartPolicy: Always
+status: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    service: hawkes-estimator
+  name: hawkes-estimator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: hawkes-estimator
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        service: hawkes-estimator
+    spec:
+      imagePullSecrets:
+      - name: tweetoscope-key
+      containers:
+        - image: gitlab-student.centralesupelec.fr:4567/2018colombod/tweetoscope_2021_06/hawkes:latest
+          name: hawkes-estimator
+          resources: {}
+      restartPolicy: Always
+status: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    service: tweet-collector
+  name: tweet-collector
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: tweet-collector
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        service: tweet-collector
+    spec:
+      imagePullSecrets:
+      - name: tweetoscope-key
+      containers:
+        - image: gitlab-student.centralesupelec.fr:4567/2018colombod/tweetoscope_2021_06/tweetcollector:latest
+          name: tweet-collector
+          resources: {}
+      restartPolicy: Always
+status: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    service: tweet-generator
+  name: tweet-generator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: tweet-generator
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        service: tweet-generator
+    spec:
+      imagePullSecrets:
+      - name: tweetoscope-key
+      containers:
+        - image: gitlab-student.centralesupelec.fr:4567/2018colombod/tweetoscope_2021_06/tweetgenerator:latest
+          name: tweet-generator
+          resources: {}
+      restartPolicy: Always
+status: {}
+
+
