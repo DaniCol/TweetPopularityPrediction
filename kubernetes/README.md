@@ -34,9 +34,3 @@ When you are done:
 When you are done:
 - Delete Zookeeper and Kafka : `kubectl -n cpusdi1-22-ns delete -f zookeeper-and-kafka.yml`
 - Delete Tweetoscope app : `kubectl -n cpusdi1-22-ns delete -f tweetoscopeapp.yml`
-
-
-```
-docker stop $(docker ps -a -q)
-docker rm $(docker ps -a -q)
-```
