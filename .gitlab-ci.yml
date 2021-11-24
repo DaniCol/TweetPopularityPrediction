@@ -4,6 +4,10 @@ stages:
 services:
   - docker:dind
 
+######################################
+# Create Tweetoscope Services images #
+######################################
+
 create_logger_docker_image_job:
     stage: create_docker_images
     image: docker:latest
@@ -65,16 +69,8 @@ create_tweetcollector_docker_image_job:
     only:
         changes:
             - src/tweet_collector/app/tweetoscopeCollector.cpp
-            - src/tweet_collector/include/tweetoscopeCascade.hpp
-            - src/tweet_collector/include/tweetoscopeCollectorParams.hpp
-            - src/tweet_collector/include/tweetoscopeConsumer.hpp
-            - src/tweet_collector/include/tweetoscopeProcessor.hpp
-            - src/tweet_collector/include/tweetoscopeProducer.hpp
-            - src/tweet_collector/include/tweetoscopeTweetReader.hpp
-            - src/tweet_collector/src/tweetoscopeCascade.hpp
-            - src/tweet_collector/src/tweetoscopeConsumer.hpp
-            - src/tweet_collector/src/tweetoscopeProcessor.hpp
-            - src/tweet_collector/src/tweetoscopeProducer.hpp
+            - src/tweet_collector/include/*
+            - src/tweet_collector/src/*
 
 create_tweetgenerator_docker_image_job:
     stage: create_docker_images
@@ -87,3 +83,53 @@ create_tweetgenerator_docker_image_job:
         changes:
             - src/tweet_generator/src/tweet-generator.cpp
             - src/tweet_generator/src/tweetoscopeGenerator.hpp
+
+
+###########################
+# Create Dashboard images #
+###########################
+
+create_grafana_docker_image_job:
+    stage: create_docker_images
+    image: docker:latest
+    script:
+        - docker build -t $CI_REGISTRY_IMAGE/logger -f ./docker/dashboard/Dockerfile.Grafana .
+        - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+        - docker push $CI_REGISTRY_IMAGE/logger
+    only:
+        changes:
+            - src/dashboard/config/provisioning/dashboards/*
+            - src/dashboard/config/provisioning/datasources/*
+
+create_loki_docker_image_job:
+    stage: create_docker_images
+    image: docker:latest
+    script:
+        - docker build -t $CI_REGISTRY_IMAGE/logger -f ./docker/dashboard/Dockerfile.Loki .
+        - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+        - docker push $CI_REGISTRY_IMAGE/logger
+    only:
+        changes:
+            - src/dashboard/config/loki-config.yaml
+
+create_prometheus_docker_image_job:
+    stage: create_docker_images
+    image: docker:latest
+    script:
+        - docker build -t $CI_REGISTRY_IMAGE/logger -f ./docker/dashboard/Dockerfile.Prometheus .
+        - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+        - docker push $CI_REGISTRY_IMAGE/logger
+    only:
+        changes:
+            - src/dashboard/config/prometheus-config.yaml
+
+create_logs2dashboard_docker_image_job:
+    stage: create_docker_images
+    image: docker:latest
+    script:
+        - docker build -t $CI_REGISTRY_IMAGE/logger -f ./docker/dashboard/Dockerfile.Logs2Dashboard .
+        - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+        - docker push $CI_REGISTRY_IMAGE/logger
+    only:
+        changes:
+            - src/dashboard/src/logs_to_dashboard.py
