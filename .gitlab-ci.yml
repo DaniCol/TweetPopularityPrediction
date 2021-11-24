@@ -95,7 +95,7 @@ create_grafana_docker_image_job:
     script:
         - docker build -t $CI_REGISTRY_IMAGE/logger -f ./docker/dashboard/Dockerfile.Grafana .
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-        - docker push $CI_REGISTRY_IMAGE/logger
+        - docker push $CI_REGISTRY_IMAGE/grafana
     only:
         changes:
             - src/dashboard/config/provisioning/dashboards/*
@@ -107,7 +107,7 @@ create_loki_docker_image_job:
     script:
         - docker build -t $CI_REGISTRY_IMAGE/logger -f ./docker/dashboard/Dockerfile.Loki .
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-        - docker push $CI_REGISTRY_IMAGE/logger
+        - docker push $CI_REGISTRY_IMAGE/loki
     only:
         changes:
             - src/dashboard/config/loki-config.yaml
@@ -118,7 +118,7 @@ create_prometheus_docker_image_job:
     script:
         - docker build -t $CI_REGISTRY_IMAGE/logger -f ./docker/dashboard/Dockerfile.Prometheus .
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-        - docker push $CI_REGISTRY_IMAGE/logger
+        - docker push $CI_REGISTRY_IMAGE/prometheus
     only:
         changes:
             - src/dashboard/config/prometheus-config.yaml
@@ -129,7 +129,7 @@ create_logs2dashboard_docker_image_job:
     script:
         - docker build -t $CI_REGISTRY_IMAGE/logger -f ./docker/dashboard/Dockerfile.Logs2Dashboard .
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-        - docker push $CI_REGISTRY_IMAGE/logger
+        - docker push $CI_REGISTRY_IMAGE/logs2dashboard
     only:
         changes:
             - src/dashboard/src/logs_to_dashboard.py
