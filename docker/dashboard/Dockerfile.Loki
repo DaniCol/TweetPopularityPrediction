@@ -1,0 +1,3 @@
+FROM grafana/loki:2.2.1
+
+COPY ./src/dashboard/config/loki-config.yaml /mnt/config/loki-config.yaml

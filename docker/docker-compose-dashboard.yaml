@@ -1,0 +1,43 @@
+version: '3.3'
+
+services:
+  logs2dashboard:
+    build:
+      context: ..
+      dockerfile: ./docker/dashboard/Dockerfile.Logs2Dashboard
+    networks:
+      - middleware_tweetoscope-net
+      - dashboard_and_monitoring-net
+  loki:
+    build: 
+      context: ..
+      dockerfile: ./docker/dashboard/Dockerfile.Loki
+    ports:
+      - "3100:3100"
+    command:
+      - -config.file=/mnt/config/loki-config.yaml
+    networks:
+      - dashboard_and_monitoring-net
+  
+  prometheus:
+    build: 
+      context: ..
+      dockerfile: ./docker/dashboard/Dockerfile.Prometheus
+    ports:
+      - "9090:9090"
+    networks:
+      - dashboard_and_monitoring-net
+  
+  grafana:
+    build: 
+      context: ..
+      dockerfile: ./docker/dashboard/Dockerfile.Grafana
+    ports:
+      - "3000:3000"
+    networks:
+      - dashboard_and_monitoring-net
+
+networks:
+  middleware_tweetoscope-net:
+    external: true
+  dashboard_and_monitoring-net:
