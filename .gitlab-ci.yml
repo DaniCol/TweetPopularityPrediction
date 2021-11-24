@@ -8,7 +8,7 @@ create_logger_docker_image_job:
     stage: create_docker_images
     image: docker:latest
     script:
-        - docker build -t $CI_REGISTRY_IMAGE/logger -f ./docker/Dockerfile.Logger .
+        - docker build -t $CI_REGISTRY_IMAGE/logger -f ./docker/services/Dockerfile.Logger .
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
         - docker push $CI_REGISTRY_IMAGE/logger
     only:
@@ -19,7 +19,7 @@ create_learner_docker_image_job:
     stage: create_docker_images
     image: docker:latest
     script:
-        - docker build -t $CI_REGISTRY_IMAGE/learner -f ./docker/Dockerfile.Learner .
+        - docker build -t $CI_REGISTRY_IMAGE/learner -f ./docker/services/Dockerfile.Learner .
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
         - docker push $CI_REGISTRY_IMAGE/learner
     only:
@@ -31,7 +31,7 @@ create_predictor_docker_image_job:
     stage: create_docker_images
     image: docker:latest
     script:
-        - docker build -t $CI_REGISTRY_IMAGE/predictor -f ./docker/Dockerfile.Predictor .
+        - docker build -t $CI_REGISTRY_IMAGE/predictor -f ./docker/services/Dockerfile.Predictor .
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
         - docker push $CI_REGISTRY_IMAGE/predictor
     only:
@@ -44,7 +44,7 @@ create_hawkes_docker_image_job:
     stage: create_docker_images
     image: docker:latest
     script:
-        - docker build -t $CI_REGISTRY_IMAGE/hawkes -f ./docker/Dockerfile.Hawkes .
+        - docker build -t $CI_REGISTRY_IMAGE/hawkes -f ./docker/services/Dockerfile.Hawkes .
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
         - docker push $CI_REGISTRY_IMAGE/hawkes
     only:
@@ -59,7 +59,7 @@ create_tweetcollector_docker_image_job:
     stage: create_docker_images
     image: docker:latest
     script:
-        - docker build -t $CI_REGISTRY_IMAGE/tweetcollector -f ./docker/Dockerfile.TweetCollector .
+        - docker build -t $CI_REGISTRY_IMAGE/tweetcollector -f ./docker/services/Dockerfile.TweetCollector .
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
         - docker push $CI_REGISTRY_IMAGE/tweetcollector
     only:
@@ -80,7 +80,7 @@ create_tweetgenerator_docker_image_job:
     stage: create_docker_images
     image: docker:latest
     script:
-        - docker build -t $CI_REGISTRY_IMAGE/tweetgenerator -f ./docker/Dockerfile.TweetGenerator .
+        - docker build -t $CI_REGISTRY_IMAGE/tweetgenerator -f ./docker/services/Dockerfile.TweetGenerator .
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
         - docker push $CI_REGISTRY_IMAGE/tweetgenerator
     only:
