@@ -3,11 +3,13 @@ kind: Service
 metadata:
   name: grafana
 spec:
+  selector:
+    app: grafana
+  type: NodePort  
   ports:
-    - name: "3000"
-      protocol: TCP
-      port: 3000
+    - port: 3000
       targetPort: 3000
+      nodePort: 32000
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -40,7 +42,8 @@ kind: Service
 metadata:
   name: loki
 spec:
-  clusterIP: None
+  selector:
+    app: loki
   ports:
     - name: "3100"
       protocol: TCP
@@ -80,7 +83,8 @@ kind: Service
 metadata:
   name: prometheus
 spec:
-  clusterIP: None
+  selector:
+    app: prometheus
   ports:
     - name: "9090"
       protocol: TCP
