@@ -134,3 +134,14 @@ create_logs2dashboard_docker_image_job:
     only:
         changes:
             - src/dashboard/src/logs_to_dashboard.py
+
+create_statalert2dashboard_docker_image_job:
+    stage: create_dashboard_docker_images
+    image: docker:latest
+    script:
+        - docker build -t $CI_REGISTRY_IMAGE/statalert2dashboard -f ./docker/dashboard/Dockerfile.StatAlert2Dashboard .
+        - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+        - docker push $CI_REGISTRY_IMAGE/statalert2dashboard
+    only:
+        changes:
+            - src/dashboard/src/stat_alert_to_dashboard.py
