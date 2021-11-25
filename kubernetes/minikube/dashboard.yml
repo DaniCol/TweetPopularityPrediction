@@ -1,0 +1,167 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: grafana
+spec:
+  ports:
+    - name: "3000"
+      protocol: TCP
+      port: 3000
+      targetPort: 3000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grafana
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: grafana
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        service: grafana
+    spec:
+      imagePullSecrets:
+      - name: tweetoscope-key
+      containers:
+        - image: gitlab-student.centralesupelec.fr:4567/2018colombod/tweetoscope_2021_06/grafana:latest
+          name: grafana
+          ports:
+            - containerPort: 3000
+          resources: {}
+      restartPolicy: Always
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: loki
+spec:
+  clusterIP: None
+  ports:
+    - name: "3100"
+      protocol: TCP
+      port: 3100
+      targetPort: 3100
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: loki
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: loki
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        service: loki
+    spec:
+      imagePullSecrets:
+      - name: tweetoscope-key
+      containers:
+        - args:
+            - -config.file=/mnt/config/loki-config.yaml
+          image: gitlab-student.centralesupelec.fr:4567/2018colombod/tweetoscope_2021_06/loki:latest
+          name: loki
+          ports:
+            - containerPort: 3100
+          resources: {}
+      restartPolicy: Always
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus
+spec:
+  clusterIP: None
+  ports:
+    - name: "9090"
+      protocol: TCP
+      port: 9090
+      targetPort: 9090
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prometheus
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: prometheus
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        service: prometheus
+    spec:
+      imagePullSecrets:
+      - name: tweetoscope-key
+      containers:
+        - image: gitlab-student.centralesupelec.fr:4567/2018colombod/tweetoscope_2021_06/prometheus:latest
+          name: prometheus
+          ports:
+            - containerPort: 9090
+          resources: {}
+      restartPolicy: Always
+status: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: logs2dashboard
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: logs2dashboard
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        service: logs2dashboard
+    spec:
+      imagePullSecrets:
+        - name: tweetoscope-key
+      containers:
+        - image: gitlab-student.centralesupelec.fr:4567/2018colombod/tweetoscope_2021_06/logs2dashboard:latest
+          name: logs2dashboard
+          resources: {}
+      restartPolicy: Always
+status: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stat2dashboard
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: stat2dashboard
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        service: stat2dashboard
+    spec:
+      imagePullSecrets:
+        - name: tweetoscope-key
+      containers:
+        - image: gitlab-student.centralesupelec.fr:4567/2018colombod/tweetoscope_2021_06/statalert2dashboard:latest
+          name: stat2dashboard
+          resources: {}
+      restartPolicy: Always
+status: {}
+
+
+
+
+
