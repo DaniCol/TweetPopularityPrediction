@@ -22,10 +22,267 @@
   "fiscalYearStartMonth": 0,
   "gnetId": null,
   "graphTooltip": 0,
-  "id": 1,
+  "id": 3,
   "links": [],
   "liveNow": false,
   "panels": [
+    {
+      "collapsed": true,
+      "datasource": null,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 38,
+      "panels": [],
+      "title": "Top 5 hottest cascades [time_window=1200]",
+      "type": "row"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 7,
+        "x": 0,
+        "y": 1
+      },
+      "id": 39,
+      "options": {
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "text": {}
+      },
+      "pluginVersion": "8.2.5",
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "avg_over_time({job=\"python_app\",__name__=\"ares\",time_window=\"1200\",type=\"ARE\"}[1m])",
+          "interval": "",
+          "legendFormat": "{{type}}",
+          "refId": "A"
+        },
+        {
+          "exemplar": true,
+          "expr": "avg_over_time({job=\"python_app\",__name__=\"ares\",time_window=\"1200\",type=\"ARE_RF\"}[1m])",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "{{type}}",
+          "refId": "B"
+        }
+      ],
+      "title": "Absolute Relative Error [time_window=1200]",
+      "type": "gauge"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "#EAB839",
+                "value": 100
+              },
+              {
+                "color": "red",
+                "value": 200
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 8,
+        "x": 7,
+        "y": 1
+      },
+      "id": 40,
+      "options": {
+        "displayMode": "gradient",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": false,
+        "text": {}
+      },
+      "pluginVersion": "8.2.5",
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "{job=\"python_app\",__name__=\"n_supp\",level=\"1\", time_window=\"1200\"}",
+          "interval": "",
+          "legendFormat": "N_tot : {{level}} hottest cascade",
+          "refId": "A"
+        },
+        {
+          "exemplar": true,
+          "expr": "{job=\"python_app\",__name__=\"n_supp\",level=\"2\",time_wndow=\"1200\"}",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "N_tot : {{level}} hottest cascade",
+          "refId": "B"
+        },
+        {
+          "exemplar": true,
+          "expr": "{job=\"python_app\",__name__=\"n_supp\",level=\"3\", time_window=\"1200\"}",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "N_tot : {{level}} hottest cascade",
+          "refId": "C"
+        },
+        {
+          "exemplar": true,
+          "expr": "{job=\"python_app\",__name__=\"n_supp\",level=\"4\", time_window=\"1200\"}",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "N_tot : {{level}} hottest cascade",
+          "refId": "D"
+        },
+        {
+          "exemplar": true,
+          "expr": "{job=\"python_app\",__name__=\"n_supp\",level=\"5\", time_window=\"1200\"}",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "N_tot : {{level}} hottest cascade",
+          "refId": "E"
+        }
+      ],
+      "title": "Top 5 hottest cascade in the last minute",
+      "type": "bargauge"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "semi-dark-blue",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 9,
+        "x": 15,
+        "y": 1
+      },
+      "id": 32,
+      "options": {
+        "displayMode": "gradient",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": false,
+        "text": {}
+      },
+      "pluginVersion": "8.2.5",
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "{job=\"python_app\",__name__=\"tweet_id\", level=\"1\", time_window=\"1200\"}",
+          "interval": "",
+          "legendFormat": "Tweet ID : {{level}} hottest cascade",
+          "refId": "A"
+        },
+        {
+          "exemplar": true,
+          "expr": "{job=\"python_app\",__name__=\"tweet_id\", level=\"2\", time_window=\"1200\"}",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "Tweet ID : {{level}} hottest cascade",
+          "refId": "B"
+        },
+        {
+          "exemplar": true,
+          "expr": "{job=\"python_app\",__name__=\"tweet_id\", level=\"3\", time_window=\"1200\"}",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "Tweet ID : {{level}} hottest cascade",
+          "refId": "C"
+        },
+        {
+          "exemplar": true,
+          "expr": "{job=\"python_app\",__name__=\"tweet_id\", level=\"4\", time_window=\"1200\"}",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "Tweet ID : {{level}} hottest cascade",
+          "refId": "D"
+        },
+        {
+          "exemplar": true,
+          "expr": "{job=\"python_app\",__name__=\"tweet_id\", level=\"5\", time_window=\"1200\"}",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "Tweet ID : {{level}} hottest cascade",
+          "refId": "E"
+        }
+      ],
+      "title": "Tweet ID of the top 5 hottest cascade in the last minute",
+      "type": "bargauge"
+    },
     {
       "collapsed": false,
       "datasource": null,
@@ -33,7 +290,264 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 0
+        "y": 7
+      },
+      "id": 34,
+      "panels": [],
+      "title": "Top 5 hottest cascades [time_window=600]",
+      "type": "row"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 7,
+        "x": 0,
+        "y": 8
+      },
+      "id": 36,
+      "options": {
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "text": {}
+      },
+      "pluginVersion": "8.2.5",
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "{job=\"python_app\",__name__=\"ares\",time_window=\"600\",type=\"ARE\"}",
+          "interval": "",
+          "legendFormat": "{{type}}",
+          "refId": "A"
+        },
+        {
+          "exemplar": true,
+          "expr": "{job=\"python_app\",__name__=\"ares\",time_window=\"600\",type=\"ARE_RF\"}",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "{{type}}",
+          "refId": "B"
+        }
+      ],
+      "title": "Absolute Relative Error [time_window=600]",
+      "type": "gauge"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "#EAB839",
+                "value": 100
+              },
+              {
+                "color": "red",
+                "value": 200
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 8,
+        "x": 7,
+        "y": 8
+      },
+      "id": 30,
+      "options": {
+        "displayMode": "gradient",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": false,
+        "text": {}
+      },
+      "pluginVersion": "8.2.5",
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "{job=\"python_app\",__name__=\"n_supp\",level=\"1\", time_window=\"600\"}",
+          "interval": "",
+          "legendFormat": "N_tot : {{level}} hottest cascade",
+          "refId": "A"
+        },
+        {
+          "exemplar": true,
+          "expr": "{job=\"python_app\",__name__=\"n_supp\",level=\"2\",time_window=\"600\"}",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "N_tot : {{level}} hottest cascade",
+          "refId": "B"
+        },
+        {
+          "exemplar": true,
+          "expr": "{job=\"python_app\",__name__=\"n_supp\",level=\"3\", time_window=\"600\"}",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "N_tot : {{level}} hottest cascade",
+          "refId": "C"
+        },
+        {
+          "exemplar": true,
+          "expr": "{job=\"python_app\",__name__=\"n_supp\",level=\"4\", time_window=\"600\"}",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "N_tot : {{level}} hottest cascade",
+          "refId": "D"
+        },
+        {
+          "exemplar": true,
+          "expr": "{job=\"python_app\",__name__=\"n_supp\",level=\"5\", time_window=\"600\"}",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "N_tot : {{level}} hottest cascade",
+          "refId": "E"
+        }
+      ],
+      "title": "Top 5 hottest cascade in the last minute",
+      "type": "bargauge"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "semi-dark-blue",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 9,
+        "x": 15,
+        "y": 8
+      },
+      "id": 41,
+      "options": {
+        "displayMode": "gradient",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": false,
+        "text": {}
+      },
+      "pluginVersion": "8.2.5",
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "{job=\"python_app\",__name__=\"tweet_id\", level=\"1\", time_window=\"600\"}",
+          "interval": "",
+          "legendFormat": "Tweet ID : {{level}} hottest cascade",
+          "refId": "A"
+        },
+        {
+          "exemplar": true,
+          "expr": "{job=\"python_app\",__name__=\"tweet_id\", level=\"2\", time_window=\"600\"}",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "Tweet ID : {{level}} hottest cascade",
+          "refId": "B"
+        },
+        {
+          "exemplar": true,
+          "expr": "{job=\"python_app\",__name__=\"tweet_id\", level=\"3\", time_window=\"600\"}",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "Tweet ID : {{level}} hottest cascade",
+          "refId": "C"
+        },
+        {
+          "exemplar": true,
+          "expr": "{job=\"python_app\",__name__=\"tweet_id\", level=\"4\", time_window=\"600\"}",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "Tweet ID : {{level}} hottest cascade",
+          "refId": "D"
+        },
+        {
+          "exemplar": true,
+          "expr": "{job=\"python_app\",__name__=\"tweet_id\", level=\"5\", time_window=\"600\"}",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "Tweet ID : {{level}} hottest cascade",
+          "refId": "E"
+        }
+      ],
+      "title": "Tweet ID of the top 5 hottest cascade in the last minute",
+      "type": "bargauge"
+    },
+    {
+      "collapsed": false,
+      "datasource": null,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 14
       },
       "id": 16,
       "panels": [],
@@ -64,7 +578,7 @@
         "h": 4,
         "w": 7,
         "x": 0,
-        "y": 1
+        "y": 15
       },
       "id": 18,
       "options": {
@@ -116,7 +630,7 @@
         "h": 4,
         "w": 7,
         "x": 7,
-        "y": 1
+        "y": 15
       },
       "id": 22,
       "options": {
@@ -176,7 +690,7 @@
         "h": 4,
         "w": 8,
         "x": 14,
-        "y": 1
+        "y": 15
       },
       "id": 28,
       "options": {
@@ -226,7 +740,7 @@
         "h": 4,
         "w": 7,
         "x": 0,
-        "y": 5
+        "y": 19
       },
       "id": 20,
       "options": {
@@ -278,7 +792,7 @@
         "h": 4,
         "w": 7,
         "x": 7,
-        "y": 5
+        "y": 19
       },
       "id": 24,
       "options": {
@@ -338,7 +852,7 @@
         "h": 4,
         "w": 8,
         "x": 14,
-        "y": 5
+        "y": 19
       },
       "id": 26,
       "options": {
@@ -371,7 +885,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 9
+        "y": 23
       },
       "id": 4,
       "panels": [],
@@ -403,7 +917,7 @@
         "h": 4,
         "w": 7,
         "x": 0,
-        "y": 10
+        "y": 24
       },
       "id": 2,
       "options": {
@@ -455,7 +969,7 @@
         "h": 4,
         "w": 8,
         "x": 7,
-        "y": 10
+        "y": 24
       },
       "id": 8,
       "options": {
@@ -507,7 +1021,7 @@
         "h": 4,
         "w": 8,
         "x": 15,
-        "y": 10
+        "y": 24
       },
       "id": 10,
       "options": {
@@ -568,7 +1082,7 @@
         "h": 4,
         "w": 7,
         "x": 0,
-        "y": 14
+        "y": 28
       },
       "id": 6,
       "options": {
@@ -622,7 +1136,7 @@
         "h": 4,
         "w": 9,
         "x": 7,
-        "y": 14
+        "y": 28
       },
       "id": 14,
       "options": {
@@ -664,5 +1178,5 @@
   "timezone": "",
   "title": "Tweetoscope",
   "uid": "wcnzLvt7k",
-  "version": 10
+  "version": 7
 }
