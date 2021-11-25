@@ -8,6 +8,13 @@ services:
     networks:
       - middleware_tweetoscope-net
       - dashboard_and_monitoring-net
+  statalert2dashboard:
+    build:
+      context: ..
+      dockerfile: ./docker/Dockerfile.StatAlert2Dashboard
+    networks:
+      - middleware_tweetoscope-net
+      - dashboard_and_monitoring-net
   loki:
     build: 
       context: ..

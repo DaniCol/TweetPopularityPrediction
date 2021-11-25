@@ -1,0 +1,7 @@
+FROM python:3.9-slim
+
+RUN pip install prometheus-client argparse kafka-python
+
+COPY ./src/dashboard/src/ /Dashboard 
+WORKDIR /Dashboard
+CMD python3 stat_alert_to_dashboard.py --broker-list kafka-service:9092
