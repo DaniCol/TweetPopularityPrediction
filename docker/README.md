@@ -16,7 +16,7 @@
 ### Stop all micro services
 - Go to docker directory : `cd <path_to_directory>/docker`
 - Run : `docker-compose -f docker-compose-services.yml -p services down`
-### Launch dashboard
+### Stop dashboard
 - Go to docker directory : `cd <path_to_directory>/docker`
 - Run : `docker-compose -f docker-compose-dashboard.yaml -p dashboard down`
 ### Stop Zookeeper and Kafka Broker
