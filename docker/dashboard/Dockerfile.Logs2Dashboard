@@ -1,0 +1,7 @@
+FROM python:3.9-slim
+
+RUN pip install python-logging-loki argparse kafka-python
+
+COPY ./src/dashboard/src/ /Dashboard 
+WORKDIR /Dashboard
+CMD python3 logs_to_dashboard.py --broker-list kafka-service:9092 --loki-url loki

@@ -4,7 +4,7 @@ services:
   logger:
     build: 
       context: ..
-      dockerfile: ./docker/Dockerfile.Logger
+      dockerfile: ./docker/services/Dockerfile.Logger
     tty: true
     networks:
       - middleware_tweetoscope-net
@@ -15,7 +15,7 @@ services:
   learner:
     build: 
       context: ..
-      dockerfile: ./docker/Dockerfile.Learner
+      dockerfile: ./docker/services/Dockerfile.Learner
     networks:
       - middleware_tweetoscope-net
     depends_on : 
@@ -23,7 +23,7 @@ services:
   predictor:
     build: 
       context: ..
-      dockerfile: ./docker/Dockerfile.Predictor
+      dockerfile: ./docker/services/Dockerfile.Predictor
     networks:
       - middleware_tweetoscope-net
     depends_on: 
@@ -31,7 +31,7 @@ services:
   hawkes_estimator:
     build: 
       context: ..
-      dockerfile: ./docker/Dockerfile.Hawkes
+      dockerfile: ./docker/services/Dockerfile.Hawkes
     networks:
       - middleware_tweetoscope-net
     depends_on:
@@ -39,7 +39,7 @@ services:
   tweet_collector:
     build: 
       context: ..
-      dockerfile: ./docker/Dockerfile.TweetCollector
+      dockerfile: ./docker/services/Dockerfile.TweetCollector
     networks:
       - middleware_tweetoscope-net
     depends_on : 
@@ -47,7 +47,7 @@ services:
   tweet_generator:
     build: 
       context: ..
-      dockerfile: ./docker/Dockerfile.TweetGenerator
+      dockerfile: ./docker/services/Dockerfile.TweetGenerator
     networks:
       - middleware_tweetoscope-net
     depends_on : 

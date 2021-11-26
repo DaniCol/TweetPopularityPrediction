@@ -1,0 +1,3 @@
+FROM prom/prometheus
+
+COPY ./src/dashboard/config/prometheus-config.yaml /etc/prometheus/prometheus.yml
