@@ -7,6 +7,7 @@
 - Run : `docker-compose -f docker-compose-dashboard.yaml -p dashboard up -d`
 ### Launch all micro services
 - Go to docker directory : `cd <path_to_directory>/docker`
+- Run : `chmod +x clean_builds_bins && ./clean_builds_bins.sh`
 - Run : `docker-compose -f docker-compose-services.yml -p services up -d`
 
 ## Stop the pipeline with docker compose 
