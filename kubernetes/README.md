@@ -5,12 +5,19 @@
   - Launch Minikube : `minikube start`
   - Create a secret to access Gitlab Private Container Registry : `chmod +x build_secret.sh && ./build_secret`
   - Launch Zookeeper and Kafka : `kubectl apply -f zookeeper-and-kafka.yml`
+  - Launch Dashboard : `kubectl apply -f dashboard.yml`
   - Launch Tweetoscope app : `kubectl apply -f tweetoscopeapp.yml`
-  - Watch logs for Logger : `kubectl logs <logger_pod_name>` 
+
+When grafana pod is running (`kubectl get pods`):
+- Post forwart port 3000 to access grafana dashboard in your machine: `kubectl port-forward deployment/grafana 3000:3000`
+- You can now access to grafana dashboard on your web browser by visiting http://localhost:3000
+  
+If you want to watch logs collected by Logger : `kubectl logs <logger_pod_name>` 
 
 When you are done:
-- Delete Zookeeper and Kafka : `kubectl delete -f zookeeper-and-kafka.yml`
 - Delete Tweetoscope app : `kubectl delete -f tweetoscopeapp.yml`
+- Delete Dashboard : `kubectl delete -f dashboard.yml`
+- Delete Zookeeper and Kafka : `kubectl delete -f zookeeper-and-kafka.yml`
 - Delete Minikube : `minikube delete`
 
 ### On Intercell
