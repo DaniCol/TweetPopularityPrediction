@@ -1,19 +1,39 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: null
+  name: dashboard-net
+spec:
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              dashboard-net: "true"
+  podSelector:
+    matchLabels:
+      dashboard-net: "true"
+---
 apiVersion: v1
 kind: Service
 metadata:
+  labels:
+    service: grafana
   name: grafana
 spec:
-  selector:
-    app: grafana
-  type: NodePort  
   ports:
-    - port: 3000
+    - name: "3000"
+      port: 3000
       targetPort: 3000
-      nodePort: 32000
+  selector:
+    service: grafana
+status:
+  loadBalancer: {}
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  labels:
+    service: grafana
   name: grafana
 spec:
   replicas: 1
@@ -24,8 +44,10 @@ spec:
   template:
     metadata:
       labels:
+        dashboard-net: "true"
         service: grafana
     spec:
+      spec:
       imagePullSecrets:
       - name: tweetoscope-key
       containers:
@@ -40,19 +62,24 @@ status: {}
 apiVersion: v1
 kind: Service
 metadata:
+  labels:
+    service: loki
   name: loki
 spec:
-  selector:
-    app: loki
   ports:
     - name: "3100"
-      protocol: TCP
       port: 3100
       targetPort: 3100
+  selector:
+    service: loki
+status:
+  loadBalancer: {}
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  labels:
+    service: loki
   name: loki
 spec:
   replicas: 1
@@ -63,6 +90,7 @@ spec:
   template:
     metadata:
       labels:
+        dashboard-net: "true"
         service: loki
     spec:
       imagePullSecrets:
@@ -81,19 +109,25 @@ status: {}
 apiVersion: v1
 kind: Service
 metadata:
+  labels:
+    service: prometheus
   name: prometheus
 spec:
-  selector:
-    app: prometheus
   ports:
     - name: "9090"
-      protocol: TCP
       port: 9090
       targetPort: 9090
+  selector:
+    service: prometheus
+status:
+  loadBalancer: {}
+
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  labels:
+    service: prometheus
   name: prometheus
 spec:
   replicas: 1
@@ -104,6 +138,7 @@ spec:
   template:
     metadata:
       labels:
+        dashboard-net: "true"
         service: prometheus
     spec:
       imagePullSecrets:
@@ -116,10 +151,13 @@ spec:
           resources: {}
       restartPolicy: Always
 status: {}
+
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  labels:
+    service: logs2dashboard
   name: logs2dashboard
 spec:
   replicas: 1
@@ -130,6 +168,7 @@ spec:
   template:
     metadata:
       labels:
+        dashboard-net: "true"
         service: logs2dashboard
     spec:
       imagePullSecrets:
@@ -141,26 +180,47 @@ spec:
       restartPolicy: Always
 status: {}
 ---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    service: statalert2dashboard
+  name: statalert2dashboard
+spec:
+  ports:
+    - name: "8000"
+      port: 8000
+      targetPort: 8000
+  selector:
+    service: statalert2dashboard
+status:
+  loadBalancer: {}
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: stat2dashboard
+  labels:
+    service: statalert2dashboard
+  name: statalert2dashboard
 spec:
   replicas: 1
   selector:
     matchLabels:
-      service: stat2dashboard
+      service: statalert2dashboard
   strategy: {}
   template:
     metadata:
       labels:
-        service: stat2dashboard
+        dashboard-net: "true"
+        service: statalert2dashboard
     spec:
       imagePullSecrets:
         - name: tweetoscope-key
       containers:
         - image: gitlab-student.centralesupelec.fr:4567/2018colombod/tweetoscope_2021_06/statalert2dashboard:latest
-          name: stat2dashboard
+          name: statalert2dashboard
+          ports:
+            - containerPort: 8000
           resources: {}
       restartPolicy: Always
 status: {}
