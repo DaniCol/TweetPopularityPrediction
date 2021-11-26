@@ -22,8 +22,7 @@ When you are done:
 
 ### On Intercell
 
-$ `\textcolor{teal}{ \text{ Eq.(3-5) in the main text} } `$
-! You should be connected to eduroam to get everything running smootly
+Attention: You should be connected to "eduroam" Wi-Fi to get everything running smootly
 
 - Open a first terminal
   - Connect to the frontal server of the Intercell cluster : `ssh cpusdi1_22@phome.metz.supelec.fr`
