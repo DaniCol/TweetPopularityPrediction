@@ -3,7 +3,7 @@
 - Open a new terminal
   - Go to docker directory : `cd <path_to_directory>/kubernetes/minikube`
   - Launch Minikube : `minikube start`
-  - Create a secret to access Gitlab Private Container Registry : `chmod +x build_secret.sh && ./build_secret`
+  - Create a secret to access Gitlab Private Container Registry : `chmod +x build_secret.sh && ./build_secret.sh`
   - Launch Zookeeper and Kafka : `kubectl apply -f zookeeper-and-kafka.yml`
   - Launch Dashboard : `kubectl apply -f dashboard.yml`
   - Launch Tweetoscope app : `kubectl apply -f tweetoscopeapp.yml`
