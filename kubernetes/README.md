@@ -1,3 +1,7 @@
+```diff
+! text in orange
+```
+
 ## Deploy the application on a Kubernetes cluster
 ### On Minikube
 - Open a new terminal
@@ -21,6 +25,8 @@ When you are done:
 - Delete Minikube : `minikube delete`
 
 ### On Intercell
+! You should be connected to eduroam to get everything running smootly
+ 
 - Open a first terminal
   - Connect to the frontal server of the Intercell cluster : `ssh cpusdi1_22@phome.metz.supelec.fr`
   - Connect to your assigned node: `ssh ic22`
