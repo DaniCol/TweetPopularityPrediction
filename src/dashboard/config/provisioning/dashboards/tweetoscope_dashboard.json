@@ -22,7 +22,6 @@
   "fiscalYearStartMonth": 0,
   "gnetId": null,
   "graphTooltip": 0,
-  "id": 3,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -88,21 +87,21 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "avg_over_time({job=\"python_app\",__name__=\"ares\",time_window=\"1200\",type=\"ARE\"}[1m])",
+          "expr": "avg_over_time({job=\"python_app\",__name__=\"ares\",time_window=\"1200\",type=\"ARE\"}[2m])",
           "interval": "",
           "legendFormat": "{{type}}",
           "refId": "A"
         },
         {
           "exemplar": true,
-          "expr": "avg_over_time({job=\"python_app\",__name__=\"ares\",time_window=\"1200\",type=\"ARE_RF\"}[1m])",
+          "expr": "avg_over_time({job=\"python_app\",__name__=\"ares\",time_window=\"1200\",type=\"ARE_RF\"}[2m])",
           "hide": false,
           "interval": "",
           "legendFormat": "{{type}}",
           "refId": "B"
         }
       ],
-      "title": "Absolute Relative Error [time_window=1200]",
+      "title": "AVG Absolute Relative Error [time_window=1200][2 min]",
       "type": "gauge"
     },
     {
@@ -195,7 +194,7 @@
           "refId": "E"
         }
       ],
-      "title": "Top 5 hottest cascade in the last minute",
+      "title": "Top 5 hottest cascade in the last two minutes",
       "type": "bargauge"
     },
     {
@@ -280,7 +279,7 @@
           "refId": "E"
         }
       ],
-      "title": "Tweet ID of the top 5 hottest cascade in the last minute",
+      "title": "Tweet ID of the top 5 hottest cascade in the last two minutes",
       "type": "bargauge"
     },
     {
@@ -345,21 +344,21 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "{job=\"python_app\",__name__=\"ares\",time_window=\"600\",type=\"ARE\"}",
+          "expr": "avg_over_time({job=\"python_app\",__name__=\"ares\",time_window=\"600\",type=\"ARE\"}[2m])",
           "interval": "",
           "legendFormat": "{{type}}",
           "refId": "A"
         },
         {
           "exemplar": true,
-          "expr": "{job=\"python_app\",__name__=\"ares\",time_window=\"600\",type=\"ARE_RF\"}",
+          "expr": "avg_over_time({job=\"python_app\",__name__=\"ares\",time_window=\"600\",type=\"ARE_RF\"}[2m])",
           "hide": false,
           "interval": "",
           "legendFormat": "{{type}}",
           "refId": "B"
         }
       ],
-      "title": "Absolute Relative Error [time_window=600]",
+      "title": "AVG Absolute Relative Error [time_window=600][2 min]",
       "type": "gauge"
     },
     {
@@ -452,7 +451,7 @@
           "refId": "E"
         }
       ],
-      "title": "Top 5 hottest cascade in the last minute",
+      "title": "Top 5 hottest cascade in the last two minutes",
       "type": "bargauge"
     },
     {
@@ -537,7 +536,7 @@
           "refId": "E"
         }
       ],
-      "title": "Tweet ID of the top 5 hottest cascade in the last minute",
+      "title": "Tweet ID of the top 5 hottest cascade in the last two minutes",
       "type": "bargauge"
     },
     {
@@ -1178,5 +1177,5 @@
   "timezone": "",
   "title": "Tweetoscope",
   "uid": "wcnzLvt7k",
-  "version": 7
+  "version": 1
 }
