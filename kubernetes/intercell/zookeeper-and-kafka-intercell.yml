@@ -55,7 +55,7 @@ spec:
     - name: KAFKA_ADVERTISED_HOST_NAME
       value: kafka
     - name: KAFKA_CREATE_TOPICS
-      value: "wikimedia:2:1,locale:1:1"
+      value: "tweets:4:1,cascade_series:4:1,cascade_properties:4:1,logs:2:1,models:1:1,samples:1:1,stat:1:1,alert:1:1"
     - name: HOST_IP
       valueFrom:
         fieldRef:

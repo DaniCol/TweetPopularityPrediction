@@ -1,86 +1,33 @@
 # Tweetoscope
 --- 
+## Project
+### Presentation
+The goal of this project is to detect as soon as possible tweets that are likely to become popular, where popularity of a tweet is defined as the number of times this tweet will be retweeted.  
+The idea is to design “elastic” microservices, based on Kafka and Kubernetes, that scale properly with an arbitrarily large number of tweets. 
+### Architecture
+Our solution is divided in small microservices that are connected to each other through Kafka 
+
+<img src="https://pennerath.pages.centralesupelec.fr/tweetoscope/graphviz-images/ead74cb4077631acad74606a761525fe2a3228c1.svg" alt="Project architecture"/>  
+
 ## Getting Started 
 
-### Build the docker image 
+### Information about the different microservices 
 
-To build the docker image, you need first to go to the docker directory 
+You can find a documentation to
+- build the `tweet-generator` <a href="https://gitlab-student.centralesupelec.fr/2018colombod/tweetoscope_2021_06/-/tree/master/src#build-tweet-generator" title="tweet-generator-build">[here]</a>
+- build the `tweet-collector` <a href="https://gitlab-student.centralesupelec.fr/2018colombod/tweetoscope_2021_06/-/tree/master/src#build-tweet-collector" title="tweet-generator-build">[here]</a>
+- Run all the microservices in a terminal <a href="https://gitlab-student.centralesupelec.fr/2018colombod/tweetoscope_2021_06/-/tree/master/src#build-tweet-collector" title="run-microservices">[here]</a>
 
-```
-cd <path_to_directory>/docker
-```
+### Run the project using docker-compose
+Our project is fully deployable with docker-compose.  
 
-Then run the following command : 
+You will find <a href="https://gitlab-student.centralesupelec.fr/2018colombod/tweetoscope_2021_06/-/blob/master/docker/README.md#run-the-pipeline-with-docker-compose" title="docker-compose">[here]</a> a detailed documentation to launch the project with docker-compose.
 
-```
-docker build -t tweetoscope . 
-```
+### Run the project using Kubernetes
+Our project is fully deployable in Kubernetes.  
 
-It will take a while to build the docker. Once the process is over, you can run the docker image with the run_image.bash script. 
-It creates a container mounted in the current tweetoscope directory so that you can have access to the main repo while beeing inside a docker container. 
+You will find <a href="https://gitlab-student.centralesupelec.fr/2018colombod/tweetoscope_2021_06/-/tree/master/kubernetes#on-minikube" title="docker-compose">[here]</a> a detailed documentation to launch the project on Minikube.  
 
-To do so, run the following commands : 
-
-```
-cd <path_to_directory> 
-sudo chmod +x run_image.bash 
-bash run_image.bash
-```
-
-### Run the hawkes estimator only (in a docker container)
-
-0. Start docker 
-
-```
-cd <path_to_your_repo>
-bash run_image.bash
-```
-
-1. Start kafka 
-
-```
-cd /home/tweetoscope/docker/kafka
-./start_kafka.sh
-```
-
-2. Create data to publish on the cascade_series topic
-
-Go to the following directory :
-
-```
-cd /home/tweetoscope/src/hawkes_estimator/app
-python3 publish_fake_data.py --broker-list localhost:9092
-```
-
-3. Launch the hawkes_estimator
-
-You need to open another terminal of the same container.
-To do so, get the id or name of your running container with 
-
-```
-docker ps 
-```
-
-Then open a new terminal and run the following commands
-
-```
-docker exec -it ID bash 
-```
-
-You need to reexport the kafka path, so repeat the 1st step in this terminal. 
-
-Finally, you can run the hawkes_estimator with this command
-
-```
-cd /home/tweetoscope/src/hawkes_estimator/app
-python3 hawkes_estimator.py --broker-list localhost:9092
-```
-
-4. In a 3rd terminal, you can read the cascade_properties topic. Repeat step 3 but launch instead
-
-```
-cd /home/tweetoscope/src/kafka_logger/debug_kafka.py
-python3 debug_kafka.py --broker-list localhost:9092
-```
+You will find <a href="https://gitlab-student.centralesupelec.fr/2018colombod/tweetoscope_2021_06/-/tree/master/kubernetes#on-intercell" title="docker-compose">[here]</a> a detailed documentation to launch the project on Intercell.
 
 

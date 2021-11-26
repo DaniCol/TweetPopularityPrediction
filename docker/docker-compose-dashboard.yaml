@@ -11,7 +11,7 @@ services:
   statalert2dashboard:
     build:
       context: ..
-      dockerfile: ./docker/Dockerfile.StatAlert2Dashboard
+      dockerfile: ./docker/dashboard/Dockerfile.StatAlert2Dashboard
     networks:
       - middleware_tweetoscope-net
       - dashboard_and_monitoring-net
