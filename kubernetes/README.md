@@ -1,7 +1,7 @@
 ## Deploy the application on a Kubernetes cluster
 ### On Minikube
 - Open a new terminal
-  - Go to docker directory : `cd <path_to_directory>/kubernetes/minikube`
+  - Go to kubernetes directory : `cd <path_to_directory>/kubernetes/minikube`
   - Launch Minikube : `minikube start`
   - Create a secret to access Gitlab Private Container Registry : `chmod +x build_secret.sh && ./build_secret.sh`
   - Launch Zookeeper and Kafka : `kubectl apply -f zookeeper-and-kafka.yml`
@@ -25,8 +25,9 @@ When you are done:
   - Connect to the frontal server of the Intercell cluster : `ssh cpusdi1_22@phome.metz.supelec.fr`
   - Connect to your assigned node: `ssh ic22`
 
+
 - Open a second terminal
-  - Go to docker directory : `cd <path_to_directory>/kubernetes/intercell`
+  - Go to kubernetes directory : `cd <path_to_directory>/kubernetes/intercell`
   - Transfert files to Intercel :
     - `scp build_secret_intercell.sh cpusdi1_22@phome.metz.supelec.fr:/usr/users/cpusdi1/cpusdi1_22`
     - `scp zookeeper-and-kafka-intercell.yml cpusdi1_22@phome.metz.supelec.fr:/usr/users/cpusdi1/cpusdi1_22`
