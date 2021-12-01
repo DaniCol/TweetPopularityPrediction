@@ -254,3 +254,8 @@ if __name__ == '__main__':
     for m in consumer:
         msg = json.loads(m.value.decode('utf8'))
         logger.log(msg)
+
+
+
+
+
