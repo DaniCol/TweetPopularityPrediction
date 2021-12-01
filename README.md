@@ -73,7 +73,7 @@ You can find a documentation to
 - build the `tweet-generator` <a href="https://gitlab-student.centralesupelec.fr/2018colombod/tweetoscope_2021_06/-/tree/master/src#build-tweet-generator" title="tweet-generator-build">[here]</a>
 - build the `tweet-collector` <a href="https://gitlab-student.centralesupelec.fr/2018colombod/tweetoscope_2021_06/-/tree/master/src#build-tweet-collector" title="tweet-generator-build">[here]</a>
 - Run all the microservices in a terminal <a href="https://gitlab-student.centralesupelec.fr/2018colombod/tweetoscope_2021_06/-/tree/master/src#run-the-different-microservices-a-terminal" title="run-microservices">[here]</a>
-- Information about the dash <a href="https://gitlab-student.centralesupelec.fr/2018colombod/tweetoscope_2021_06/-/tree/22-final-documentation-ameliorations/src/dashboard#dashboard" title="dashboard-info">[here]</a>
+- Information about the dashboard <a href="https://gitlab-student.centralesupelec.fr/2018colombod/tweetoscope_2021_06/-/tree/22-final-documentation-ameliorations/src/dashboard#dashboard" title="dashboard-info">[here]</a>
 
 ### Run the project using docker-compose
 Our project is fully deployable with docker-compose.  
