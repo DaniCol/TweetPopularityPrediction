@@ -14,8 +14,7 @@ The visualization of the dashboard is done with Grafana. Loki and Prometheus are
 <img src="./images/grafana_dashboard_tweetoscope.PNG"/>
 
 3. You will now have access to our dashboard which has several sections with several graphs. 
-   1. The first two lines contain information about the performance of the prediction as a function of the time windows (here 600 and 1200).  
-They also contain information about the hottest tweets with their ids.
+   1. The first two lines contain information about the performance of the prediction as a function of the time windows (here 600 and 1200). The pie charts show the Absolute Relative Error with (ARE_RF) and without (ARE) the use of RandomForest. If you wait a few iterations, you will notice that the results are much better with the RandomForest.  They also contain information about the hottest tweets with their ids.
 
 
 <img src="./images/grafana_stat_hottest.PNG"/>
