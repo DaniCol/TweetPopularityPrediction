@@ -1,7 +1,7 @@
 ## Deploy the application on a Kubernetes cluster
 ### On Minikube
 - Open a new terminal
-  - Go to docker directory : `cd <path_to_directory>/kubernetes/minikube`
+  - Go to kubernetes directory : `cd <path_to_directory>/kubernetes/minikube`
   - Launch Minikube : `minikube start`
   - Create a secret to access Gitlab Private Container Registry : `chmod +x build_secret.sh && ./build_secret.sh`
   - Launch Zookeeper and Kafka : `kubectl apply -f zookeeper-and-kafka.yml`
@@ -9,8 +9,8 @@
   - Launch Tweetoscope app : `kubectl apply -f tweetoscopeapp.yml`
 
 When grafana pod is running (`kubectl get pods`):
-- Post forwart port 3000 to access grafana dashboard in your machine: `kubectl port-forward deployment/grafana 3000:3000`
-- You can now access to grafana dashboard on your web browser by visiting http://localhost:3000
+- Post forwart port 3000 to access the grafana dashboard in your machine: `kubectl port-forward deployment/grafana 3000:3000`
+- You can now access the grafana dashboard on your web browser by visiting http://localhost:3000
   
 If you want to watch logs collected by Logger : `kubectl logs <logger_pod_name>` 
 
@@ -21,12 +21,16 @@ When you are done:
 - Delete Minikube : `minikube delete`
 
 ### On Intercell
+
+Warning : You should be connected to "eduroam" Wi-Fi to get everything running smootly
+
 - Open a first terminal
   - Connect to the frontal server of the Intercell cluster : `ssh cpusdi1_22@phome.metz.supelec.fr`
   - Connect to your assigned node: `ssh ic22`
 
+
 - Open a second terminal
-  - Go to docker directory : `cd <path_to_directory>/kubernetes/intercell`
+  - Go to kubernetes directory : `cd <path_to_directory>/kubernetes/intercell`
   - Transfert files to Intercel :
     - `scp build_secret_intercell.sh cpusdi1_22@phome.metz.supelec.fr:/usr/users/cpusdi1/cpusdi1_22`
     - `scp zookeeper-and-kafka-intercell.yml cpusdi1_22@phome.metz.supelec.fr:/usr/users/cpusdi1/cpusdi1_22`

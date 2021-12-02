@@ -163,7 +163,7 @@
         },
         {
           "exemplar": true,
-          "expr": "{job=\"python_app\",__name__=\"n_supp\",level=\"2\",time_wndow=\"1200\"}",
+          "expr": "{job=\"python_app\",__name__=\"n_supp\",level=\"2\",time_window=\"1200\"}",
           "hide": false,
           "interval": "",
           "legendFormat": "N_tot : {{level}} hottest cascade",

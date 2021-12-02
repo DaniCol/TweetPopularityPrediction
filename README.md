@@ -9,6 +9,62 @@ Our solution is divided in small microservices that are connected to each other 
 
 <img src="https://pennerath.pages.centralesupelec.fr/tweetoscope/graphviz-images/ead74cb4077631acad74606a761525fe2a3228c1.svg" alt="Project architecture"/>  
 
+```
+.  
+├── README.md  
+├── docker  
+│   ├── README.md  
+│   ├── clean_builds_bins.sh  
+│   ├── dashboard  
+│   ├── docker-compose-dashboard.yaml  
+│   ├── docker-compose-middleware.yml  
+│   ├── docker-compose-services.yml  
+│   ├── middleware  
+│   └── services  
+├── documentation  
+│   └── report.pdf  
+├── kubernetes  
+│   ├── README.md  
+│   ├── intercell  
+│   └── minikube  
+└── src
+    ├── README.MD
+    ├── dashboard
+    │   ├── README.md
+    │   ├── config
+    │   ├── images
+    │   └── src
+    ├── hawkes_estimator
+    │   ├── hawkes_estimator.py
+    │   ├── src
+    │   └── test
+    ├── learner
+    │   ├── estimator.py
+    │   └── learner.py
+    ├── logger
+    │   └── logger.py
+    ├── predictor
+    │   ├── main.py
+    │   ├── src
+    │   └── test
+    ├── tweet_collector
+    │   ├── CMakeLists.txt
+    │   ├── app
+    │   ├── include
+    │   ├── params.config
+    │   ├── params_deployment.config
+    │   ├── script
+    │   ├── src
+    │   └── test
+    └── tweet_generator
+        ├── CMakeLists.txt
+        ├── data
+        ├── params.config
+        ├── params_deployment.config
+        ├── script
+        └── src  
+```
+
 ## Getting Started 
 
 ### Run the project in terminals 
@@ -17,6 +73,7 @@ You can find a documentation to
 - build the `tweet-generator` <a href="https://gitlab-student.centralesupelec.fr/2018colombod/tweetoscope_2021_06/-/tree/master/src#build-tweet-generator" title="tweet-generator-build">[here]</a>
 - build the `tweet-collector` <a href="https://gitlab-student.centralesupelec.fr/2018colombod/tweetoscope_2021_06/-/tree/master/src#build-tweet-collector" title="tweet-generator-build">[here]</a>
 - Run all the microservices in a terminal <a href="https://gitlab-student.centralesupelec.fr/2018colombod/tweetoscope_2021_06/-/tree/master/src#run-the-different-microservices-a-terminal" title="run-microservices">[here]</a>
+- Information about the dashboard <a href="https://gitlab-student.centralesupelec.fr/2018colombod/tweetoscope_2021_06/-/tree/22-final-documentation-ameliorations/src/dashboard#dashboard" title="dashboard-info">[here]</a>
 
 ### Run the project using docker-compose
 Our project is fully deployable with docker-compose.  
