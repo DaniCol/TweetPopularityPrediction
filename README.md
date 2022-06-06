@@ -1,7 +1,6 @@
 # Tweetoscope
 --- 
 ## Project
-The video presentation is available on Youtube with this link <a href="https://youtu.be/lFV9WzjWQNY" title="youtube_presentation">[here]</a>.  
 In addition to the README files, a report is available in `./documentation/report.pdf`
 ### Presentation
 The goal of this project is to detect as soon as possible tweets that are likely to become popular, where popularity of a tweet is defined as the number of times this tweet will be retweeted.  
